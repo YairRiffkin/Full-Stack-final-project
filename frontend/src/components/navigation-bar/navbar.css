@@ -1,0 +1,59 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  
+}
+ .a {
+  text-align: center;
+ }
+
+/* Style the entire navigation bar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333; /* Set your desired background color */
+  padding: 10px; /* Add some padding for spacing */
+}
+
+/* Style the left section (Welcome message) */
+.navbar > div:nth-child(1) {
+  /* Customize font, color, etc. */
+}
+
+/* Style the middle section (Links) */
+.navbar > div:nth-child(2) {
+  display: flex;
+  gap: 10px; /* Add spacing between links */
+ 
+}
+
+/* Style individual links */
+.navbar a {
+  color: white;
+  text-decoration: none;
+  padding: 5px 10px; /* Adjust as needed */
+  text-align: center;
+}
+
+/* Change link color on hover */
+.navbar a:hover {
+  background-color: #111;
+}
+
+/* Style the right section (Logout button) */
+.navbar > div:nth-child(3) {
+  /* Customize font, color, etc. */
+}
+
+/* Style the logout button */
+.navbar button {
+  background-color: #04AA6D;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  /* Additional styling as needed */
+}
+
