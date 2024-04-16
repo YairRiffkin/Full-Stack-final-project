@@ -8,9 +8,8 @@ export function HomePage() {
 
       useEffect(() => {
           if (localStorage.getItem("access_token")) {
-            fetch(BACKEND_URL + "/users/specific", { headers: { "Authorization": "Bearer " + localStorage.getItem("access_token") } })
-            .then(response => response.json())
-            .then(data => setUserData(data));
+            const userDetails = JSON.parse(localStorage.getItem("userData"));
+            setUserData(userDetails);
           }
         }, []);
        
