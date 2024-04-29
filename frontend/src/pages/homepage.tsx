@@ -1,25 +1,26 @@
 import { useEffect, useState } from "react";
+import { User } from "../models/usertypes";
+import './pagestyle.css'
 
-
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 export function HomePage() {
-    const [userData, setUserData] = useState<any | null>(localStorage.getItem("userData"));
+  const [userDetails, setUserDetails] = useState<User | null>(null)
+    useEffect(() => {
+      const userData = localStorage.getItem("userData");
+      setUserDetails(userData ? JSON.parse(userData) : null)
+  }, []);
 
-      useEffect(() => {
-          if (localStorage.getItem("access_token")) {
-            const userDetails = JSON.parse(localStorage.getItem("userData"));
-            setUserData(userDetails);
-          }
-        }, []);
-       
-        if (userData) {
+        
+        if (userDetails) {
+          console.log("userDetails: ", userDetails);
+          const username = userDetails.username;
+          console.log("username: ", username)
           return <>
             <h2>You are logged in as:</h2>
-            <p>{userData.username}</p>
-            <p>{userData.employee_id}</p>
-            <p>{userData.role} {userData.location}</p>
-            <p>{userData.user_level}</p>
+            <p>{userDetails.username}</p>
+            <p>{userDetails.employee_id}</p>
+            <p>{userDetails.role} {userDetails.location}</p>
+            <p>{userDetails.user_level}</p>
           </>
         } else {
         return <h2>Home Page - nothing for now</h2>;

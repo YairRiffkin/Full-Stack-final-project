@@ -1,26 +1,36 @@
 
-import { useEffect, useState } from "react";
-import { homeView, navBarView, navLeftView } from "./user-elements";
+import { useEffect, useRef, useState } from "react";
+import { homeView, navBarView, navLeftView } from "./navbaruserinterface";
 import './navbar.css'
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { User } from "../../models/usertypes";
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 export function NavigationBar() {
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-    const storedData = localStorage.getItem("userData");
-    const userDetails = JSON.parse(storedData);
-    const userLevel = userDetails?.user_level;
-    (userLevel) ? localStorage.setItem("user_level", userLevel) : null;
+    const [userDetails, setUserDetails] = useState<User | null>(null)
+    const location = useLocation();
+    const precLocationRef = useRef(location);
     useEffect(() => {
-        (userLevel) ? setIsLoggedIn(true) : setIsLoggedIn(false);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [localStorage.getItem("access_token")]);
+        if (precLocationRef.current.pathname !== location.pathname) {
+            if (localStorage.getItem("access_token")){
+                fetch(BACKEND_URL + "/users/specific", { 
+                    headers: { "Authorization": "Bearer " + localStorage.getItem("access_token") } }
+                )
+                .then(response => response.json())
+                .then(data => setUserDetails(data));
+            }
+        }
+        precLocationRef.current = location;
+                    }
+    , [location, userDetails]);
     
     return <>
         <nav className="navbar">
-        {isLoggedIn ? (
+        {userDetails ? (
             <>
-                <div>{ navLeftView(userDetails?.username) }</div>
-                <div>{ navBarView(userDetails?.user_level) }</div>
+                <div>{ navLeftView(userDetails.username) }</div>
+                <div>{ navBarView(userDetails.user_level) }</div>
             </>
         ) : (
             <>
@@ -29,12 +39,13 @@ export function NavigationBar() {
             </>
             )}
                 <div>
-                    <Link to="/">
+                    <Link to="/logout">
                         <button
                             onClick={() => {
                                 localStorage.removeItem("access_token");
                                 localStorage.removeItem("userData");
-                                localStorage.removeItem("user_level");
+                                localStorage.removeItem("data");
+                                setUserDetails(null);
                             }}
                         >
                         Logout

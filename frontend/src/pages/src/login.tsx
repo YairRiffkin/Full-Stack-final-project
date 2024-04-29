@@ -1,25 +1,21 @@
-import { useEffect, useRef, useState } from "react";
-import { User } from "../models/usertypes";
-import { useNavigate } from "react-router-dom";
-import './pagestyle.css'
+import { useRef, useState } from "react";
+import { Link } from "react-router-dom";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
-export type UserDataProps = {
-    setUserToken: (userId: string | null) => void
-  }
-
-export function LoginLines({ setUserToken }: UserDataProps ) {
+export function LoginLines() {
     const usernameRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
     const [inputStatus, setInputStatus] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
+    const [userData, setUserData] = useState<string | null>(null)
 
     function checkEmptyInput() {
         (usernameRef.current?.value && passwordRef.current?.value)? setInputStatus(false): setInputStatus(true);
     }
     
-    return <div className="form-box">
+
+
+    return <div>
             <h2>Please login with your email or employee id as username</h2>
             <input 
                 type="text" 
@@ -35,9 +31,13 @@ export function LoginLines({ setUserToken }: UserDataProps ) {
                 ref={passwordRef} 
                 onChange={checkEmptyInput} 
             />
+            <Link to = "/home">
                 <button 
                 // TODO: error on both fetch's
                     disabled = {inputStatus}
+                    if (inputStatus) {
+                        
+                    }
                     onClick={() => {
                         const username = usernameRef.current?.value || "";
                         const password = passwordRef.current?.value || "";
@@ -48,42 +48,18 @@ export function LoginLines({ setUserToken }: UserDataProps ) {
                             })
                             .then(response => response.json())
                             .then(data => {
-                                    if (data.error) {setError(data.error)}
-                                    else {
-                                      localStorage.setItem("access_token", data.access_token);
-                                      setUserToken(data.access_token);}
-                                 })
-                                // TODO: check why the error does not come through
+                                    localStorage.setItem("access_token", data.access_token);
+                                    setUserData(data.access_token);
+                                    console.log("done")})
+                            .then(data => console.log(data))
                             .catch((error) => alert("Error logging in: " + error));
                         }
                     
                     }                
                     >&#10003;
                 </button>
-                { error && <small style={{color: "red"}}>{ error }</small>}
+            </Link>
     </div>;
 }
 
-export function LoggedUser() {
-    const [userData, setUserData] = useState<User | null>(null);
-    const navigate = useNavigate();
-      useEffect(() => {
-          fetch(BACKEND_URL + "/users/specific", { headers: { "Authorization": "Bearer " + localStorage.getItem("access_token") } })
-          .then(response => response.json())
-          .then(data => {setUserData(data)
-          })
-          
-    }, []);
-    localStorage.setItem("userData", JSON.stringify(userData));
-          if (userData) {
-            return <>
-              { navigate('/', {replace: true})}
-            </>}
-  } 
-
-  export function LoginPage() {
-    const [userToken, setUserToken] = useState<string | null>(null);
-  return <>
-    {userToken ? <LoggedUser /> : <LoginLines setUserToken={setUserToken} /> }
-  </>
-}
+  

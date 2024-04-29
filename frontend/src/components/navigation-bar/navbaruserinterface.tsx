@@ -41,7 +41,7 @@ export function navLeftView (name: string | "") {
     return <>
         <a>Welcome</a>
         <a>{ name }</a>
-        <Link to= "/user-edit"><button>Edit Details</button></Link>
+        <Link to= "/userdata"><button>Edit Details</button></Link>
     </>
 }
 
