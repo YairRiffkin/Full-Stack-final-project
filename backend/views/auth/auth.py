@@ -1,5 +1,5 @@
 
-from dataclasses import asdict, fields
+from dataclasses import fields
 from flask import Blueprint, request
 from flask_jwt_extended import create_access_token, get_jwt, jwt_required
 from models.users import User
@@ -12,6 +12,7 @@ bp = Blueprint("auth", __name__)
 def login() -> dict:
     print("XXX IN LOGIN XXX")
     data = request.get_json()
+    print("backend data received: ", data)
     if "@" in data["username"]:
         search_column = "email"
     else:
@@ -22,6 +23,7 @@ def login() -> dict:
         return {"error": "Invalid username or password"}, 503
     else:
         access_token = create_access_token(identity=user["id"])
+        print("backend access token: ", access_token)
         return {"access_token": access_token}
 
 
@@ -30,6 +32,7 @@ def login() -> dict:
 def get_me() -> dict:
     token_data = get_jwt()
     user_id = token_data["sub"]
+    print("user id: ", user_id)
     select_items = [field.name for field in fields(User)]
     user = db_fetchone("users", select_items, ["id"], [user_id])
     if user is None:
@@ -37,6 +40,3 @@ def get_me() -> dict:
     else:
         return_dict = {item: user[item] for item in select_items}
         return return_dict
-
-
-

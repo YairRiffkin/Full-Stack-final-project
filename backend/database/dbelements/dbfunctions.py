@@ -25,8 +25,6 @@ def db_insert(table: str, columns: list, data_items: list) -> None:
     db = get_db()
     cursor = db.cursor()
     for data in data_items:
-        print("string: ", query_string)
-        print("data: ", data)
         cursor.execute(query_string, data)
     db.commit()
     db.close()

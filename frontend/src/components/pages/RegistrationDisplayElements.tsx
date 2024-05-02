@@ -38,9 +38,12 @@ export const EmailWarning: string[] =[
     "Must be a valid xxx.com email",
     ]
 
-    export const PasswordWarning: string[] =[ 
-        "No spaces at beginning or end of line",
-        "Must contain at least: 1 capital letter, 1 lowercase letter & 1 digit",
-        "Must be exactly 6 characters long",
-        "Passwords do not match"
-        ]
+export const PasswordWarning: string[] =[ 
+    "No spaces at beginning or end of line",
+    "Must contain at least: 1 capital letter, 1 lowercase letter & 1 digit",
+    "Must be exactly 6 characters long",
+    "Passwords do not match"
+    ]
+
+
+

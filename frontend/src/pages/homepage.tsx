@@ -3,26 +3,18 @@ import { User } from "../models/usertypes";
 import './pagestyle.css'
 
 
-export function HomePage() {
-  const [userDetails, setUserDetails] = useState<User | null>(null)
-    useEffect(() => {
-      const userData = localStorage.getItem("userData");
-      setUserDetails(userData ? JSON.parse(userData) : null)
-  }, []);
-
+export function HomePage({ userDetails }: { userDetails: User | null }) {
+  console.log("homepage: ", userDetails?.user_level)
         
         if (userDetails) {
-          console.log("userDetails: ", userDetails);
-          const username = userDetails.username;
-          console.log("username: ", username)
           return <>
-            <h2>You are logged in as:</h2>
-            <p>{userDetails.username}</p>
-            <p>{userDetails.employee_id}</p>
-            <p>{userDetails.role} {userDetails.location}</p>
-            <p>{userDetails.user_level}</p>
-          </>
+          <div className= "form-box">
+          {userDetails.user_level === "pending" && <p>pending</p>}
+          {userDetails.user_level === "admin" && <p>admin</p>}
+          {userDetails.user_level === "user" && <p>user</p>}
+          {userDetails.user_level === "proc" && <p>proc</p>}
+          </div></>
         } else {
-        return <h2>Home Page - nothing for now</h2>;
+        return <h2 className="form-box">Home Page - nothing for now</h2>;
         }
 }

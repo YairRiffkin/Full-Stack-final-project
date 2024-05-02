@@ -1,5 +1,4 @@
 
-import copy
 from flask import Blueprint, request
 from flask_jwt_extended import create_access_token, get_jwt, jwt_required
 
@@ -29,14 +28,12 @@ def new_user() -> dict:
             error.update({"Duplicate": ["Either employee ID or email are used by existing user"]})
         else:
             new_user_db_data = new_user.make_db_data("pending", {"password": password})
-            print("columns: ", new_user_db_data[0])
-            print("data: ", new_user_db_data[1])
             db_insert("users", new_user_db_data[0], [new_user_db_data[1]])
-            pass
+            print(new_user.make_frontend_data())
     else:
         error.update(exceptions)
-    print("error: ", error)
     if error:
+        print("error: ", {"error": error})
         return {"error": error}
     else:
-        return {"pending": "pending"}
+        return {"userData": new_user.make_frontend_data()}

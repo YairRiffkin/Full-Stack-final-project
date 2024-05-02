@@ -1,5 +1,6 @@
 from dataclasses import asdict, dataclass, fields
 import re
+import sqlite3
 import phonenumbers as tel
 
 from database.dbelements.dbfunctions import db_fetchone
@@ -117,3 +118,8 @@ class User:
         columns = list(class_dict.keys())
         data = list(class_dict.values())
         return [columns, data]
+
+    def make_frontend_data(self) -> dict:
+        class_dict = asdict(self)
+        class_dict.pop("id")
+        return class_dict

@@ -1,5 +1,5 @@
 import { NewUser } from "../../models/usertypes";
-import { EmailWarning, EmployeeIdWarning, PasswordWarning, RegistrationFormDetails, UserNameWarning } from "../pages/registrationform";
+import { EmailWarning, EmployeeIdWarning, PasswordWarning, RegistrationFormDetails, UserNameWarning } from "../pages/RegistrationDisplayElements";
 
 export function UserNameValid(username: string) {
   const warning: string[] = [];
@@ -95,8 +95,8 @@ export function CheckFormComplete(form: NewUser, warnings: string[]) {
   const formCheck: boolean = !Object.values(form).every(value =>  value !== null && 
                                                                   value !== undefined  && 
                                                                   value !== '');
-  console.log("result: ", result, "check: ", formCheck, "logic: ", result || formCheck)
   
+  console.log("result: ", result, "check: ", formCheck, "logic: ", result || formCheck)
   return result || formCheck;
 }
 
@@ -106,4 +106,30 @@ export function SetDefaultWarning(warnings: string[]) {
     (detail.name === "location") ? (warnings[index] = "You must choose an option") : null;
   });
   return warnings;
+}
+
+export function RegisterIssues(error: string[]) {
+  console.log("items: ", error);
+
+  const detailsList: string[] = [];
+  const itemList: string[] = [];
+  for (const key in error) {
+      itemList.push(key);
+      for (const detail in error[key] as unknown as string[]) {
+          detailsList.push(error[key][detail]);
+      }
+  }
+  return  <small>Please address the below issues before submitting
+            <ol>
+              { itemList.map((item) => (
+                  <li>{ item }: 
+                    <ul>
+                      {detailsList.map((detail) => (
+                        <li>{ detail }</li>
+                      ))}
+                    </ul>
+                  </li>
+              ))}
+            </ol>
+          </small>
 }

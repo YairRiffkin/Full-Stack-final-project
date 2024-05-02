@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import './pagestyle.css'
 import { FormDetail } from "../models/formtypes";
-import { RegistrationFormDetails } from "../components/pages/registrationform";
-import { CheckFormComplete, CheckInputLine, SetDefaultWarning } from "../components/functions/registrationformfunctions";
-import { NewUser } from "../models/usertypes";
+import { RegistrationFormDetails } from "../components/pages/RegistrationDisplayElements";
+import { CheckFormComplete, CheckInputLine, RegisterIssues, SetDefaultWarning } from "../components/functions/RegistrationValidateFunctions";
+import { NewUser, User } from "../models/usertypes";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -19,17 +19,22 @@ export function NewUserRequest() {
                                                               password2: ""
                                                             })
   const [warnings, setWarnings] = useState<(string)[]>(SetDefaultWarning(Array(formDetails.length).fill("")));
+  const [error, setError] = useState<string[] | null>(null)
   const [formComplete, setFormComplete] = useState<boolean>(true);
+  const [userData, setUserData] = useState<User | null>(null);
 
   useEffect(() => {
     setFormComplete(CheckFormComplete(registerForm, warnings));
-  }, [registerForm, warnings]);
+    if (userData) { localStorage.setItem("userData", JSON.stringify(userData)); }
+  }, [error, registerForm, userData, warnings]);
+
+  console.log("error: ", error);
+  console.log("userData: ", userData);
   
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const index = formDetails.findIndex((detail) => detail.name === e.target.name);
-    const newWarning = CheckInputLine(
-                                      String(e.target.name),
+    const newWarning = CheckInputLine(String(e.target.name),
                                       e.target.value,
                                       e.target.name === "password2" ? 
                                         registerForm.password1 : 
@@ -47,12 +52,11 @@ export function NewUserRequest() {
         [name]: value,
       }));
   };
-  // {console.log("Form: ", registerForm)}
-  {console.log("Json: ", JSON.stringify(registerForm))}
 
   return  <form className="form-box">
+            { (error) ? RegisterIssues(error) : null }
             {formDetails.map(( formDetail, index ) => (
-            <div key= {index}>  
+            <div key= {index}>
               { warnings[index] && <small style={{color: "red"}}>{warnings[index]}</small>}
               {formDetail.element === "input" && (
                 <input                 
@@ -80,25 +84,27 @@ export function NewUserRequest() {
               <button
                 type= "button"
                 disabled={formComplete}
-                onClick={(e) => {
-                  e.preventDefault();
-                  // setRegisterForm((prevData) => ({
-                  //   ...prevData,
-                  // }));
-                  console.log("Form: ", registerForm);
+                onClick={() => {
+                  // if (error) { e.preventDefault(); }
+                  console.log("error: ", error);
                   fetch(BACKEND_URL + "/new_user", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify(registerForm),
                       })
                       .then(response => response.json())
-                      .then(data => { localStorage.setItem("data", JSON.stringify(data)); })
+                      .then(data => { 
+                        if (data.error) { setError(data.error) }
+                        if (data.userData) { 
+                          setUserData(data.userData);
+                          setError(null);
+                        }
+                      })
                       .catch((error) => alert("Error logging in: " + error));
                     
                   }}
               >
                  { formComplete ? <span>Complete the form as requested</span> :<strong>SUBMIT</strong> }
-                 
               </button>
           </form>;
     
