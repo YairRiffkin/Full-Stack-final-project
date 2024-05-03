@@ -15,6 +15,7 @@ def query_select(table: str, select_item: list, columns: list) -> str:
         add_and = "AND "
     return result
 
+
 def query_insert(table: str, columns: list) -> str:
     """"Create INSERT command to database:
         INSERT INTO table ({colum1, column2,..}) VALUES (?, ?, ...);"

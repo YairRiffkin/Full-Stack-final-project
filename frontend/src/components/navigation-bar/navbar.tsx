@@ -13,7 +13,7 @@ export type UserDataProps = {   setUserToken: (userId: string | null) => void;
 
 export function NavigationBar({ setUserToken, userDetails, setUserDetails }: UserDataProps) { 
     useEffect(() => {
-        localStorage.setItem("userData", JSON.stringify(userDetails));
+        if (userDetails) {localStorage.setItem("userData", JSON.stringify(userDetails));}
     }, [userDetails]);
     
 

@@ -3,7 +3,7 @@ from dataclasses import fields
 from flask import Blueprint, request
 from flask_jwt_extended import create_access_token, get_jwt, jwt_required
 from models.users import User
-from database.dbelements.dbfunctions import db_fetchone
+from database.dbelements.dbfunctions import db_fetchone, db_log
 
 bp = Blueprint("auth", __name__)
 
@@ -15,14 +15,18 @@ def login() -> dict:
     print("backend data received: ", data)
     if "@" in data["username"]:
         search_column = "email"
+        username = data["username"].lower()
     else:
         search_column = "employee_id"
-    oper_list = [data["username"].upper(), data["password"]]
-    user = db_fetchone("users", ["id"], [search_column, "password"], oper_list)
+        username = data["username"].upper()
+    oper_list = [username, data["password"]]
+    user = db_fetchone("users", ["id", "employee_id"], [search_column, "password"], oper_list)
+    logged_user = str(user["employee_id"])
     if user is None:
         return {"error": "Invalid username or password"}, 503
     else:
         access_token = create_access_token(identity=user["id"])
+        db_log(logged_user, "user", "active", "login", logged_user, None, False)
         print("backend access token: ", access_token)
         return {"access_token": access_token}
 

@@ -1,10 +1,7 @@
-from dataclasses import asdict, dataclass, fields
+from dataclasses import asdict, dataclass
 import re
-import sqlite3
 import phonenumbers as tel
-
 from database.dbelements.dbfunctions import db_fetchone
-from database.db import get_db
 
 
 @dataclass

@@ -1,8 +1,9 @@
 
+from time import sleep
 from flask import Blueprint, request
 from flask_jwt_extended import create_access_token, get_jwt, jwt_required
 
-from database.dbelements.dbfunctions import db_insert
+from database.dbelements.dbfunctions import db_insert, db_log
 from models.users import User
 
 bp = Blueprint("users", __name__)
@@ -28,7 +29,13 @@ def new_user() -> dict:
             error.update({"Duplicate": ["Either employee ID or email are used by existing user"]})
         else:
             new_user_db_data = new_user.make_db_data("pending", {"password": password})
-            db_insert("users", new_user_db_data[0], [new_user_db_data[1]])
+            log_data = [new_user.employee_id, "user", new_user.user_level, "register", new_user.employee_id, "admin"]
+            db_insert(
+                        "users",                # table
+                        new_user_db_data[0],    # list of columns
+                        [new_user_db_data[1]],   # list of data
+                        log_data                # history log data
+            )
             print(new_user.make_frontend_data())
     else:
         error.update(exceptions)

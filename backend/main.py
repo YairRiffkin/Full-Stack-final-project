@@ -2,7 +2,7 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
-from database.db import close_db
+from database.db import close_db, init_db
 from views.auth import auth
 from views.users import users
 
@@ -17,6 +17,7 @@ app.register_blueprint(auth.bp)
 app.register_blueprint(users.bp)
 
 print("starting the app")
+init_db()
 
 
 # flask --app main run

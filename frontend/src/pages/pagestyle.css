@@ -11,12 +11,36 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     background-color: #f9f9f9;
+    text-align: center;
   }
+
+  .form-box ol {
+    list-style-type: decimal;
+    margin-left: 20px;
+}
+
+.form-box li {
+    margin-bottom: 10px;
+}
   
   .form-box h2 {
     font-size: 1rem;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
   }
+
+  .form-box a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.form-box a:hover {
+    text-decoration: underline;
+}
+
+.form-box p {
+  margin-top: 0;
+}
   
   .form-box input {
     width: 100%;
@@ -34,20 +58,27 @@
     border-radius: 4px;
   }
   
-  .form-box button {
+  .form-box button[type="submit"] {
     width: 100%;
     padding: 10px;
     background-color: #007bff;
     color: #fff;
-    border: none;
+    border: 1px;
     border-radius: 4px;
     cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
   }
 
-  .form-box button:disabled {
+  .form-box button[type="submit"]:disabled  {
     background-color: #8c939b;
     color: #b30c0c;
+    cursor: not-allowed;
   }
+
+  .form-box button[type="submit"]:hover {
+    background-color: #0056b3;
+}
 
   .form-box input[type="submit"] {
     width: 100%;
@@ -60,12 +91,12 @@
   }
 
   
-  .user-info {
+  .form-box .user-info {
     font-size: 1.2rem;
-    text-align: center;
+    color: #555;
     margin: 20px 0;
   }
   
-  .user-info p {
+  .form-box .user-info p {
     margin-bottom: 10px;
   }

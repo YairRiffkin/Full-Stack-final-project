@@ -4,10 +4,16 @@ import { FormDetail } from "../models/formtypes";
 import { RegistrationFormDetails } from "../components/pages/RegistrationDisplayElements";
 import { CheckFormComplete, CheckInputLine, RegisterIssues, SetDefaultWarning } from "../components/functions/RegistrationValidateFunctions";
 import { NewUser, User } from "../models/usertypes";
+import { useNavigate } from "react-router-dom";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
-export function NewUserRequest() {
+export type UserDataProps = { 
+                            userDetails: User | null;
+                            setUserDetails: (details: User | null) => void;
+                            }
+
+export function NewUserRequest({ setUserDetails, userDetails }: UserDataProps) {
   const formDetails: FormDetail[] = RegistrationFormDetails;
   const [registerForm, setRegisterForm] = useState<NewUser>({ username: "",
                                                               employee_id: "",
@@ -21,15 +27,15 @@ export function NewUserRequest() {
   const [warnings, setWarnings] = useState<(string)[]>(SetDefaultWarning(Array(formDetails.length).fill("")));
   const [error, setError] = useState<string[] | null>(null)
   const [formComplete, setFormComplete] = useState<boolean>(true);
-  const [userData, setUserData] = useState<User | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setFormComplete(CheckFormComplete(registerForm, warnings));
-    if (userData) { localStorage.setItem("userData", JSON.stringify(userData)); }
-  }, [error, registerForm, userData, warnings]);
+    if (userDetails) { localStorage.setItem("userData", JSON.stringify(userDetails)); }
+  }, [error, registerForm, userDetails, warnings]);
 
   console.log("error: ", error);
-  console.log("userData: ", userData);
+  console.log("userData: ", userDetails);
   
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -81,11 +87,10 @@ export function NewUserRequest() {
               )}     
               </div>
               ))}
-              <button
-                type= "button"
+              <button type= "submit"
                 disabled={formComplete}
-                onClick={() => {
-                  // if (error) { e.preventDefault(); }
+                onClick={(e) => {
+                  e.preventDefault(); 
                   console.log("error: ", error);
                   fetch(BACKEND_URL + "/new_user", {
                       method: "POST",
@@ -94,10 +99,12 @@ export function NewUserRequest() {
                       })
                       .then(response => response.json())
                       .then(data => { 
+                        console.log("register data: ", data);
                         if (data.error) { setError(data.error) }
                         if (data.userData) { 
-                          setUserData(data.userData);
+                          setUserDetails(data.userData);
                           setError(null);
+                          navigate('/');
                         }
                       })
                       .catch((error) => alert("Error logging in: " + error));

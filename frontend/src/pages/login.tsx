@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import './pagestyle.css'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
@@ -35,7 +35,7 @@ export function LoginPage({ setUserToken }: UserDataProps ) {
                 ref={passwordRef} 
                 onChange={checkEmptyInput} 
             />
-                <button 
+                <button type= "submit"
                     disabled = {inputStatus}
                     onClick={() => {
                         const username = usernameRef.current?.value || "";
@@ -49,8 +49,8 @@ export function LoginPage({ setUserToken }: UserDataProps ) {
                             .then(data => {
                                     if (data.error) {setError(data.error)}
                                     else {
-                                      setUserToken(data.access_token);
-                                      navigate('/');
+                                        setUserToken(data.access_token);
+                                        navigate('/');
                                     }
                                  })
                             .catch((error) => alert("Error logging in: " + error));

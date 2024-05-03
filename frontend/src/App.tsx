@@ -49,7 +49,7 @@ export default function App() {
             <Route path="/pending" element={<PendingRequest />} />
             <Route path="/procurement" element={<ProcData />} />
             <Route path="/userdata" element={<UserEdit />} />
-            <Route path="/register" element={<NewUserRequest />} />
+            <Route path="/register" element={<NewUserRequest setUserDetails={setUserDetails} userDetails={userDetails}/>} />
             <Route path="/logout" element={<Logout />} />
           </Routes>
         </div>
