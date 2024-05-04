@@ -17,7 +17,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 export default function App() {
   const initialUserToken = localStorage.getItem('userToken') || null;
-  const [userToken, setUserToken] = useState<string | null>(initialUserToken);
+  const [userToken, setUserToken] = useState<string | null>(initialUserToken || null);
   const [userDetails, setUserDetails] = useState<User | null>(null);
 
     useEffect(() => {
