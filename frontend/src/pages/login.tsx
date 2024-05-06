@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import './pagestyle.css'
+import '../components/static/pagestyle.css'
+
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 

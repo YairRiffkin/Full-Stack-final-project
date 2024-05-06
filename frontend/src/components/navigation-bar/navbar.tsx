@@ -1,6 +1,6 @@
 
 import { homeView, navBarView, navLeftView } from "./navbaruserinterface";
-import './navbar.css'
+import '../static/navbar.css';
 import { Link } from "react-router-dom";
 import { User } from "../../models/usertypes";
 import { useEffect } from "react";

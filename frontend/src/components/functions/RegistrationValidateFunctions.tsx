@@ -9,7 +9,7 @@ export function UserNameValid(username: string) {
       if (username !== trimmedName) { warning.push(UserNameWarning[0]) } 
       if (username.split(" ").length !== 2) { warning.push(UserNameWarning[1], UserNameWarning[2]) }
     }
-  
+  console.log("username warning: ", warning)
   return warning
 }
 
@@ -84,6 +84,7 @@ export function CheckInputLine(name: string, value: string, value1: string) {
     warning = PasswordValid(value);}
   if (name === "password2") {
     warning = PasswordVerify(value, value1);}
+  console.log("function warning: ", warning, typeof(warning))
   return warning;
 }
 
@@ -132,4 +133,21 @@ export function RegisterIssues(error: string[]) {
               ))}
             </ol>
           </small>
+}
+
+export function WarningDisplay(warnings: string | null) {
+  if (warnings) {
+    const splitWarning = warnings.split(",");
+    return (
+      <>
+        {splitWarning.map((warning, index) => (
+          <>
+          <small key={index}>{warning}. </small><br />
+          </>
+        ))}
+      </>
+    );
+  } else {
+    return null;
+  }
 }

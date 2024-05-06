@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import './pagestyle.css'
+import '../components/static/pagestyle.css'
 import { FormDetail } from "../models/formtypes";
 import { RegistrationFormDetails } from "../components/pages/RegistrationDisplayElements";
-import { CheckFormComplete, CheckInputLine, RegisterIssues, SetDefaultWarning } from "../components/functions/RegistrationValidateFunctions";
+import { CheckFormComplete, CheckInputLine, RegisterIssues, SetDefaultWarning, WarningDisplay } from "../components/functions/RegistrationValidateFunctions";
 import { NewUser, User } from "../models/usertypes";
 import { useNavigate } from "react-router-dom";
 
@@ -29,13 +29,12 @@ export function NewUserRequest({ setUserDetails, userDetails }: UserDataProps) {
   const [formComplete, setFormComplete] = useState<boolean>(true);
   const navigate = useNavigate();
 
+  
+
   useEffect(() => {
     setFormComplete(CheckFormComplete(registerForm, warnings));
-    if (userDetails) { localStorage.setItem("userData", JSON.stringify(userDetails)); }
-  }, [error, registerForm, userDetails, warnings]);
-
-  console.log("error: ", error);
-  console.log("userData: ", userDetails);
+    // if (userDetails) { localStorage.setItem("userData", JSON.stringify(userDetails)); }
+  }, [error, registerForm, warnings]);
   
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -61,57 +60,65 @@ export function NewUserRequest({ setUserDetails, userDetails }: UserDataProps) {
 
   return  <form className="form-box">
             { (error) ? RegisterIssues(error) : null }
-            {formDetails.map(( formDetail, index ) => (
-            <div key= {index}>
-              { warnings[index] && <small style={{color: "red"}}>{warnings[index]}</small>}
-              {formDetail.element === "input" && (
-                <input                 
-                  type= {formDetail.type}
-                  name= {formDetail.name}
-                  placeholder= {formDetail.placeholder}
-                  maxLength={formDetail.maxLength || undefined}
-                  onChange= { handleChange }
-                />    
-              )} 
-              {formDetail.element === "select" && (
-                <div style = {{ display: "flex ", alignItems: "top" }}>
-                  <label style = {{ marginRight: "10px" }}>{formDetail.placeholder}: </label>
-                  <select name= {formDetail.name} onChange= { (e) => handleChange(e) }> 
-                    {formDetail.options?.map((option) => (
-                      <option key= {option} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select> 
-                </div>   
-              )}     
-              </div>
-              ))}
+              <table>
+                {formDetails.map(( formDetail, index ) => (
+                  <tr key={index}>
+                      <td>
+                        {formDetail.element === "input" && (
+                          <input                 
+                            type= {formDetail.type}
+                            name= {formDetail.name}
+                            placeholder= {formDetail.placeholder}
+                            maxLength={formDetail.maxLength || undefined}
+                            onChange= { handleChange }
+                          />    
+                        )} 
+                        {formDetail.element === "select" && (
+                          <div style = {{ display: "flex ", alignItems: "top" }}>
+                            <label style = {{ marginRight: "10px" }}>
+                              {formDetail.placeholder}: 
+                            </label>
+                              <select name= { formDetail.name } onChange= { (e) => handleChange(e) }> 
+                                {formDetail.options?.map((option) => (
+                                  <option key= { option } value={ option }>
+                                    {option}
+                                  </option>
+                                ))}
+                              </select> 
+                          </div>   
+                        )}     
+                      </td>
+                      <td>
+                        {warnings[index] && WarningDisplay(warnings[index])}
+                      </td>
+                  </tr>
+                ))}
+              </table>
               <button type= "submit"
-                disabled={formComplete}
-                onClick={(e) => {
-                  e.preventDefault(); 
-                  console.log("error: ", error);
-                  fetch(BACKEND_URL + "/new_user", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify(registerForm),
-                      })
-                      .then(response => response.json())
-                      .then(data => { 
-                        console.log("register data: ", data);
-                        if (data.error) { setError(data.error) }
-                        if (data.userData) { 
-                          setUserDetails(data.userData);
-                          setError(null);
-                          navigate('/');
-                        }
-                      })
-                      .catch((error) => alert("Error logging in: " + error));
-                    
-                  }}
+                      disabled={formComplete}
+                      onClick={(e) => {
+                        e.preventDefault(); 
+                        console.log("error: ", error);
+                        fetch(BACKEND_URL + "/new_user", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(registerForm),
+                            })
+                            .then(response => response.json())
+                            .then(data => { 
+                              console.log("register data: ", data);
+                              if (data.error) { setError(data.error) }
+                              if (data.userData) { 
+                                setUserDetails(data.userData);
+                                setError(null);
+                                navigate('/');
+                              }
+                            })
+                            .catch((error) => alert("Error logging in: " + error));
+                          
+                      }}
               >
-                 { formComplete ? <span>Complete the form as requested</span> :<strong>SUBMIT</strong> }
+                { formComplete ? <span>Complete the form as requested</span> :<strong>SUBMIT</strong> }
               </button>
           </form>;
     

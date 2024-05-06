@@ -11,6 +11,7 @@ export type User = {
 }
 
 export type NewUser = {
+    [key: string]: string | undefined;
     username: string
     employee_id: string
     email: string
@@ -18,5 +19,5 @@ export type NewUser = {
     phone_number: string
     role: string
     password1: string
-    password2: string | null
+    password2: string
 }

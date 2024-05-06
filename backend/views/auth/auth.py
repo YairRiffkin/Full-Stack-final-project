@@ -27,7 +27,6 @@ def login() -> dict:
     else:
         access_token = create_access_token(identity=user["id"])
         db_log(logged_user, "user", "active", "login", logged_user, None, False)
-        print("backend access token: ", access_token)
         return {"access_token": access_token}
 
 
@@ -36,11 +35,14 @@ def login() -> dict:
 def get_me() -> dict:
     token_data = get_jwt()
     user_id = token_data["sub"]
-    print("user id: ", user_id)
     select_items = [field.name for field in fields(User)]
+    print("select items: ", select_items)
     user = db_fetchone("users", select_items, ["id"], [user_id])
+    for item in select_items:
+        print(item, ": ", user[item])
     if user is None:
         return {"error": "User not found"}
     else:
         return_dict = {item: user[item] for item in select_items}
+        print("return dict: ", return_dict)
         return return_dict

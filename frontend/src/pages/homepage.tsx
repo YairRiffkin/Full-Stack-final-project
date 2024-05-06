@@ -1,6 +1,6 @@
 import { ActiveHeader, BlankHeader, BlankHomepage, HomeBodyDisplay, HomeDisplay, PendingHeader } from "../components/pages/HomePageDisplayElements";
 import { User } from "../models/usertypes";
-import './pagestyle.css'
+import '../components/static/pagestyle.css'
 
 
 export function HomePage({ userDetails }: { userDetails: User | null }) {

@@ -48,7 +48,7 @@ export default function App() {
             <Route path="/newitem" element={<NewItem />} />
             <Route path="/pending" element={<PendingRequest />} />
             <Route path="/procurement" element={<ProcData />} />
-            <Route path="/userdata" element={<UserEdit />} />
+            <Route path="/userdata" element={<UserEdit setUserDetails={setUserDetails} userDetails={userDetails}/>} />
             <Route path="/register" element={<NewUserRequest setUserDetails={setUserDetails} userDetails={userDetails}/>} />
             <Route path="/logout" element={<Logout />} />
           </Routes>

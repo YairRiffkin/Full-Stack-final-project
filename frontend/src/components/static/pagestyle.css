@@ -5,13 +5,19 @@
   }
   
   .form-box {
-    max-width: 400px;
+    width: auto;
+    max-width: 80%;
     margin: 0 auto;
     padding: 15px;
     border: 1px solid #ccc;
     border-radius: 8px;
     background-color: #f9f9f9;
+    /* text-align: center; */
+  }
+
+  .form-box form {
     text-align: center;
+    top: 50%
   }
 
   .form-box ol {
@@ -41,6 +47,14 @@
 .form-box p {
   margin-top: 0;
 }
+
+.form-box tr {
+  display: flex;
+}
+
+.form-box td {
+  width: 50%;
+}
   
   .form-box input {
     width: 100%;
@@ -59,6 +73,9 @@
   }
   
   .form-box button[type="submit"] {
+    display: flex;
+    justify-content: center;
+    margin: auto;
     width: 100%;
     padding: 10px;
     background-color: #007bff;
@@ -88,6 +105,17 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
+  }
+
+  .form-box small {
+    width: 100%;
+    /* padding: 10px; */
+    color: #d41212;
+    border: none;
+    border-radius: 4px;
+    text-align: justify;
+    /* border: 20px; */
+    /* margin-left: 20px; */
   }
 
   
