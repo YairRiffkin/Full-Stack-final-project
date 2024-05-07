@@ -33,7 +33,7 @@ export function NewUserRequest({ setUserDetails, userDetails }: UserDataProps) {
 
   useEffect(() => {
     setFormComplete(CheckFormComplete(registerForm, warnings));
-    // if (userDetails) { localStorage.setItem("userData", JSON.stringify(userDetails)); }
+    if (userDetails) { localStorage.setItem("userData", JSON.stringify(userDetails)); }
   }, [error, registerForm, warnings]);
   
   
@@ -99,7 +99,7 @@ export function NewUserRequest({ setUserDetails, userDetails }: UserDataProps) {
                       onClick={(e) => {
                         e.preventDefault(); 
                         console.log("error: ", error);
-                        fetch(BACKEND_URL + "/new_user", {
+                        fetch(BACKEND_URL + "/users/new_user", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(registerForm),

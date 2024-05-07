@@ -26,7 +26,7 @@ export function PendingHeader() {
 
 export function ActiveHeader() {
     return  <>
-                <h2>Welcome</h2><br />
+                <h2>{localStorage.getItem("message") ? localStorage.getItem("message") : "Welcome"}</h2><br />
                 <>You are logged in as:</><br />
             </>
 }

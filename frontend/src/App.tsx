@@ -21,7 +21,6 @@ export default function App() {
   const [userDetails, setUserDetails] = useState<User | null>(null);
 
     useEffect(() => {
-      
       if (userToken) {
       { fetch(BACKEND_URL + "/users/specific", { headers: { "Authorization": "Bearer " + userToken } })
         .then(response => response.json())
@@ -32,8 +31,8 @@ export default function App() {
         })
         .catch((error) => alert("Error fetching user data: " + error))
       }}
-      console.log("app user token: ", userToken);
-      console.log("app user Details: ", userDetails);
+      // console.log("app user token: ", userToken);
+      // console.log("app user Details: ", userDetails);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userToken]);
     
@@ -48,7 +47,7 @@ export default function App() {
             <Route path="/newitem" element={<NewItem />} />
             <Route path="/pending" element={<PendingRequest />} />
             <Route path="/procurement" element={<ProcData />} />
-            <Route path="/userdata" element={<UserEdit setUserDetails={setUserDetails} userDetails={userDetails}/>} />
+            <Route path="/userdata" element={<UserEdit userToken={ userToken} userDetails={userDetails}/>} />
             <Route path="/register" element={<NewUserRequest setUserDetails={setUserDetails} userDetails={userDetails}/>} />
             <Route path="/logout" element={<Logout />} />
           </Routes>

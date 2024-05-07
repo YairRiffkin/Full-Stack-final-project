@@ -1,15 +1,16 @@
 
+from dataclasses import fields
 from time import sleep
 from flask import Blueprint, request
 from flask_jwt_extended import create_access_token, get_jwt, jwt_required
 
-from database.dbelements.dbfunctions import db_insert, db_log
+from database.dbelements.dbfunctions import db_fetchone, db_insert, db_log, db_set
 from models.users import User
 
 bp = Blueprint("users", __name__)
 
 
-@bp.route("/new_user", methods=["POST"])
+@bp.route("/users/new_user", methods=["POST"])
 def new_user() -> dict:
     print("XXX IN NEW USER XXX")
     error = {}
@@ -44,3 +45,24 @@ def new_user() -> dict:
         return {"error": error}
     else:
         return {"userData": new_user.make_frontend_data()}
+
+
+@bp.route("/users/update", methods=["GET", "POST"])
+@jwt_required()
+def get_me() -> dict:
+    token_data = get_jwt()
+    print("token: ", token_data)
+    data = request.get_json()
+    print("body: ", data)
+    user_id = token_data["sub"]
+    user = db_fetchone("users", ["employee_id", "email"], ["id"], [user_id])
+    if (user["employee_id"] == data["employee_id"].upper()) and (user["email"] == data["email"].lower()):
+        log_data = [data["employee_id"], "user", "active", "update user", data["employee_id"], None]
+        updated_user = User(*(data.get(attr) if data.get(attr) else None for attr in User.__annotations__))
+        updated_user.beautify_user_data()
+        update_data = updated_user.make_update_data()
+        print("update data: ", update_data)
+        db_set("users", update_data[0], update_data[1], user_id, log=log_data)
+        return {}
+    else:
+        return {"error": "You cannot update other users details"}

@@ -120,3 +120,13 @@ class User:
         class_dict = asdict(self)
         class_dict.pop("id")
         return class_dict
+    
+    def make_update_data(self) -> list:
+        class_dict = asdict(self)
+        class_dict.pop("id", None)
+        class_dict.pop("employee_id", None)
+        class_dict.pop("email", None)
+        class_dict.pop("user_level", None)
+        columns = list(class_dict.keys())
+        data = list(class_dict.values())
+        return [columns, data]

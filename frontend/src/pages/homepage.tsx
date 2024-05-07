@@ -4,7 +4,6 @@ import '../components/static/pagestyle.css'
 
 
 export function HomePage({ userDetails }: { userDetails: User | null }) {
-  console.log("homepage: ", userDetails?.user_level)
   const status = userDetails?.user_level
                   ? userDetails?.user_level === "pending"
                       ? "pending"

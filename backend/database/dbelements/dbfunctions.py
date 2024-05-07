@@ -1,7 +1,7 @@
 
 import datetime
 from database.db import get_db
-from database.dbelements.db_query_strings import query_insert, query_select
+from database.dbelements.db_query_strings import query_insert, query_select, query_set
 
 
 def db_fetchone(table: str,
@@ -21,7 +21,11 @@ def db_fetchone(table: str,
     return user
 
 
-def db_insert(table: str, columns: list, data_items: list, log: list = None) -> None:
+def db_insert(table: str,
+              columns: list,
+              data_items: list,
+              log: list = None
+              ) -> None:
     """Insert a set of data into the relevant table"""
     query_string = query_insert(table, columns)
     print("string: ", query_string)
@@ -35,7 +39,7 @@ def db_insert(table: str, columns: list, data_items: list, log: list = None) -> 
     db.close()
 
 
-def db_log(identifier: str,         # what is the objected logged identifier
+def db_log(identifier: str,         # what is the object logged identifier
            type: str,               # what is the type of object (user, item)
            current: str,            # current status (pending, active)
            action: str,             # action performed (approve, update)
@@ -57,3 +61,24 @@ def db_log(identifier: str,         # what is the objected logged identifier
     if not external:
         db.commit()
         db.close()
+
+
+def db_set(table: str,
+           columns: list,
+           values: list,
+           condition_value: str,
+           condition_key: str = "id",
+           log: list = None
+           ) -> None:
+    query_string = query_set(table, columns, values)
+    query_string = query_string + f"{condition_key} = {condition_value};"
+    print("set query string: ", query_string)
+    print("set log: ", log)
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute(query_string)
+    if log:
+        db_log(*log)
+    db.commit()
+    db.close()
+# WHERE user_id = 1;

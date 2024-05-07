@@ -17,8 +17,8 @@ def query_select(table: str, select_item: list, columns: list) -> str:
 
 
 def query_insert(table: str, columns: list) -> str:
-    """"Create INSERT command to database:
-        INSERT INTO table ({colum1, column2,..}) VALUES (?, ?, ...);"
+    """Create INSERT command to database:
+        INSERT INTO table ({colum1, column2,..}) VALUES (?, ?, ...);
     """
     add_comma = ""
     parameter_sign = ""
@@ -30,4 +30,21 @@ def query_insert(table: str, columns: list) -> str:
     result = result + f") VALUES ({parameter_sign})"
     return result
 
-# print(db_select("users", ["id"], ["username"]))
+
+def query_set(table: str, columns: list, values: list) -> str:
+    """Create SET command to database:
+        UPDATE table
+        SET column1 = value1, column2 = value2, ...
+        WHERE condition;
+    """
+    add_comma = ""
+    result = f"UPDATE {table} SET "
+    for column, value in zip(columns, values):
+        result = result + add_comma + column + " = '" + value + "'"
+        add_comma = ", "
+    result = result + " WHERE "
+    return result
+
+# UPDATE table_name
+# SET column1 = value1, column2 = value2, ...
+# WHERE condition;

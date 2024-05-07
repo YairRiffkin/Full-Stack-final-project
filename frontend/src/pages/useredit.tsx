@@ -1,46 +1,47 @@
 import { useEffect, useState } from "react";
 import '../components/static/pagestyle.css'
 import { FormDetail } from "../models/formtypes";
-import { CheckFormComplete, CheckInputLine, RegisterIssues, SetDefaultWarning, WarningDisplay } from "../components/functions/RegistrationValidateFunctions";
+import { RegisterIssues, WarningDisplay } from "../components/functions/RegistrationValidateFunctions";
 import { NewUser, User } from "../models/usertypes";
 import { useNavigate } from "react-router-dom";
-import { UpdateUserFormDetails } from "../components/pages/UpdateUserDisplayElements copy";
+import { RegistrationFormDetails } from "../components/pages/RegistrationDisplayElements";
+import { CheckUpdateUserComplete, CheckUserUpdateInputLine } from "../components/functions/UpdateUserValidateFunctions";
+import { UpdateHomeMessage } from "../components/pages/UpdateUserDisplayElements copy";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 export type UserDataProps = { 
                             userDetails: User | null;
-                            setUserDetails: (details: User | null) => void;
+                            userToken: string | null;
                             }
 
-export function UserEdit({ setUserDetails, userDetails }: UserDataProps) {
-  const formDetails: FormDetail[] = UpdateUserFormDetails;
-  const [registerForm, setRegisterForm] = useState<NewUser>({ username: userDetails?.username || "",
-                                                              employee_id: userDetails?.employee_id || "",
-                                                              email: userDetails?.email || "",
-                                                              location: userDetails?.location || "",
-                                                              phone_number: userDetails?.phone_number || "",
-                                                              role: userDetails?.role || "",
+export function UserEdit({ userDetails, userToken }: UserDataProps) {
+  //TODO: add "update password" feature
+  const formDetails: FormDetail[] = RegistrationFormDetails;
+  const userData = localStorage.getItem("userData");
+  const defaultForm = userData ? JSON.parse(userData) : null;
+  const [registerForm, setRegisterForm] = useState<NewUser>({ username: defaultForm?.username || "",
+                                                              employee_id: defaultForm?.employee_id || "",
+                                                              email: defaultForm?.email || "",
+                                                              location: defaultForm?.location || "",
+                                                              phone_number: defaultForm?.phone_number || "",
+                                                              role: defaultForm?.role || "",
                                                               password1: "",
                                                               password2: ""
                                                             })
-  const [warnings, setWarnings] = useState<(string)[]>(SetDefaultWarning(Array(formDetails.length).fill("")));
+  const [warnings, setWarnings] = useState<(string)[]>(Array(formDetails.length).fill(""));
   const [error, setError] = useState<string[] | null>(null)
   const [formComplete, setFormComplete] = useState<boolean>(true);
   const navigate = useNavigate();
 
-  console.log("edit userdetails: ", userDetails)
-  console.log("edit registerForm: ", registerForm)
-
-  
-
   useEffect(() => {
-    setFormComplete(CheckFormComplete(registerForm, warnings));
-  }, [error, registerForm, warnings]);  
+    setFormComplete(CheckUpdateUserComplete(registerForm, warnings));
+    // setUpdatePassword(updateClick ? true : false)
+  }, [error, registerForm, userDetails, warnings]);  
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const index = formDetails.findIndex((detail) => detail.name === e.target.name);
-    const newWarning = CheckInputLine(String(e.target.name),
+    const newWarning = CheckUserUpdateInputLine(String(e.target.name),
                                       e.target.value,
                                       e.target.name === "password2" ? 
                                         registerForm.password1 : 
@@ -62,19 +63,26 @@ export function UserEdit({ setUserDetails, userDetails }: UserDataProps) {
   return  <form className="form-box">
             { (error) ? RegisterIssues(error) : null }
               <table>
-                {formDetails.map(( formDetail, index ) => (
-                  <tr key={index}>
+                <tbody>
+                  {formDetails.map(( formDetail, index ) => {
+                    if (formDetail.name === 'password1' || formDetail.name === 'password2') {
+                      return null;
+                    }
+          
+                    return (
+                    <tr key={index}>
+                      <td>{ formDetail.placeholder }</td>
                       <td>
-                        {formDetail.element === "input" && (
-                          <input                 
+                      { formDetail.element === "input" &&  (
+                          <input 
+                            disabled= { (formDetail.name === "employee_id" || formDetail.name === "email") ? true : false }               
                             type= {formDetail.type}
                             name= {formDetail.name}
-                            placeholder= {formDetail.placeholder}
                             value={ registerForm[formDetail.name] }
                             maxLength={formDetail.maxLength || undefined}
                             onChange= { handleChange }
                           />    
-                        )} 
+                      )}
                         {formDetail.element === "select" && (
                           <div style = {{ display: "flex ", alignItems: "top" }}>
                             <label style = {{ marginRight: "10px" }}>
@@ -83,12 +91,13 @@ export function UserEdit({ setUserDetails, userDetails }: UserDataProps) {
                               <select 
                                 name= { formDetail.name } 
                                 value= {registerForm[formDetail.name]} 
-                                onChange= { (e) => handleChange(e) }> 
-                                  {formDetail.options?.map((option) => (
-                                    <option key= { option } value={ option }>
-                                      {option}
-                                    </option>
-                                  ))}
+                                onChange= { (e) => handleChange(e) }
+                              > 
+                                {formDetail.options?.map((option) => (
+                                  <option key= { option } value={ option }>
+                                    {option}
+                                  </option>
+                                ))}
                               </select> 
                           </div>   
                         )}     
@@ -96,35 +105,40 @@ export function UserEdit({ setUserDetails, userDetails }: UserDataProps) {
                       <td>
                         {warnings[index] && WarningDisplay(warnings[index])}
                       </td>
-                  </tr>
-                ))}
+                    </tr>
+                    );
+                  })}
+                </tbody>
               </table>
-              <button type= "submit"
-                      disabled={formComplete}
-                      onClick={(e) => {
-                        e.preventDefault(); 
-                        console.log("error: ", error);
-                        fetch(BACKEND_URL + "/new_user", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(registerForm),
-                            })
-                            .then(response => response.json())
-                            .then(data => { 
-                              console.log("register data: ", data);
-                              if (data.error) { setError(data.error) }
-                              if (data.userData) { 
-                                setUserDetails(data.userData);
-                                setError(null);
-                                navigate('/');
-                              }
-                            })
-                            .catch((error) => alert("Error logging in: " + error));
-                          
-                      }}
-              >
-                { formComplete ? <span>Complete the form as requested</span> :<strong>SUBMIT</strong> }
-              </button>
+                <button type= "submit"
+                        disabled={formComplete}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          fetch(BACKEND_URL + "/users/update", {
+                              method: "POST",
+                              headers: { 
+                                "Content-Type": "application/json",
+                                "Authorization": "Bearer " + userToken
+                              },
+                              body: JSON.stringify(registerForm),
+                              })
+                              .then(response => response.json())
+                              .then(data => { 
+                                console.log("update response: ", data);
+                                if (data.error) { setError(data.error) }
+                                if (data) {
+                                  localStorage.setItem("message", UpdateHomeMessage)
+                                  setError(null);
+                                  navigate('/');
+                                }
+                              })
+                              .catch((error) => alert("Error logging in: " + error));
+                            
+                        }}
+                >
+                  { formComplete ? <span>Complete the form</span> :<strong>UPDATE</strong> }
+                </button>
+            
           </form>;
     
 }
