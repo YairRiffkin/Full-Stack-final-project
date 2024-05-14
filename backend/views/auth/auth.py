@@ -1,5 +1,6 @@
 
 from dataclasses import fields
+from datetime import timedelta
 from flask import Blueprint, request
 from flask_jwt_extended import create_access_token, get_jwt, jwt_required
 from models.users import User
@@ -12,7 +13,6 @@ bp = Blueprint("auth", __name__)
 def login() -> dict:
     print("XXX IN LOGIN XXX")
     data = request.get_json()
-    print("backend data received: ", data)
     if "@" in data["username"]:
         search_column = "email"
         username = data["username"].lower()
@@ -25,7 +25,8 @@ def login() -> dict:
     if user is None:
         return {"error": "Invalid username or password"}, 503
     else:
-        access_token = create_access_token(identity=user["id"])
+        expires_delta = timedelta(hours=8)
+        access_token = create_access_token(identity=user["id"], expires_delta=expires_delta)
         db_log(logged_user, "user", "active", "login", logged_user, None, False)
         return {"access_token": access_token}
 
@@ -38,8 +39,6 @@ def get_me() -> dict:
     select_items = [field.name for field in fields(User)]
     print("select items: ", select_items)
     user = db_fetchone("users", select_items, ["id"], [user_id])
-    for item in select_items:
-        print(item, ": ", user[item])
     if user is None:
         return {"error": "User not found"}
     else:

@@ -100,8 +100,7 @@ export function CheckFormComplete(form: NewUser, warnings: string[]) {
 
 export function SetDefaultWarning(warnings: string[]) {
   RegistrationFormDetails.map((detail, index) => {
-    (detail.name === "role") ? (warnings[index] = "You must choose an option") : null;
-    (detail.name === "location") ? (warnings[index] = "You must choose an option") : null;
+    (detail.element === "select") ? (warnings[index] = "You must choose an option") : null;
   });
   return warnings;
 }
@@ -130,17 +129,18 @@ export function RegisterIssues(error: string[]) {
           </small>
 }
 
-export function WarningDisplay(warnings: string | null) {
+export function  WarningDisplay(warnings: string | null) {
+  
   if (warnings) {
     const splitWarning = warnings.split(",");
-    console.log("warning display warnings: ", splitWarning)
+    console.log("in display warnings", warnings)
     return (
       <>
         {splitWarning.map((warning, index) => (
-          <>
-          <small key={index}>{warning}. </small><br />
-          </>
-        ))}
+          <p key={index}>
+          <small>{ warning }. </small><br />
+          </p>
+   ) )}
       </>
     );
   } else {

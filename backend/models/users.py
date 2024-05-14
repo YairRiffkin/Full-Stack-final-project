@@ -120,7 +120,7 @@ class User:
         class_dict = asdict(self)
         class_dict.pop("id")
         return class_dict
-    
+
     def make_update_data(self) -> list:
         class_dict = asdict(self)
         class_dict.pop("id", None)

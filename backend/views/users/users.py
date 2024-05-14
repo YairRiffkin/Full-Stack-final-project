@@ -12,20 +12,16 @@ bp = Blueprint("users", __name__)
 
 @bp.route("/users/new_user", methods=["POST"])
 def new_user() -> dict:
-    print("XXX IN NEW USER XXX")
     error = {}
     data = request.get_json()
     if data["password1"] == data["password2"]:
         password = data["password1"]
-        print("password: ", password)
     else:
         error.update({"Password": ["Passwords don't match"]})
     new_user = User(*(data.get(attr) if data.get(attr) else None for attr in User.__annotations__))
     exceptions = new_user.check_user_details()
-    print("exceptions: ", exceptions)
     if not exceptions:
         new_user.beautify_user_data()
-        print("Nice new user: ", new_user)
         if new_user.user_is_duplicate():
             error.update({"Duplicate": ["Either employee ID or email are used by existing user"]})
         else:
@@ -37,11 +33,9 @@ def new_user() -> dict:
                         [new_user_db_data[1]],   # list of data
                         log_data                # history log data
             )
-            print(new_user.make_frontend_data())
     else:
         error.update(exceptions)
     if error:
-        print("error: ", {"error": error})
         return {"error": error}
     else:
         return {"userData": new_user.make_frontend_data()}
@@ -51,9 +45,7 @@ def new_user() -> dict:
 @jwt_required()
 def get_me() -> dict:
     token_data = get_jwt()
-    print("token: ", token_data)
     data = request.get_json()
-    print("body: ", data)
     user_id = token_data["sub"]
     user = db_fetchone("users", ["employee_id", "email"], ["id"], [user_id])
     if (user["employee_id"] == data["employee_id"].upper()) and (user["email"] == data["email"].lower()):
@@ -61,7 +53,6 @@ def get_me() -> dict:
         updated_user = User(*(data.get(attr) if data.get(attr) else None for attr in User.__annotations__))
         updated_user.beautify_user_data()
         update_data = updated_user.make_update_data()
-        print("update data: ", update_data)
         db_set("users", update_data[0], update_data[1], user_id, log=log_data)
         return {}
     else:

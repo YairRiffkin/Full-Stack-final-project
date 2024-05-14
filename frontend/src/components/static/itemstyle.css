@@ -1,0 +1,95 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.form-box {
+  width: auto;
+  max-width: 80%;
+  margin: 0 auto;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.form-box form {
+  text-align: center;
+}
+
+.form-box input {
+  width: 100%; 
+  min-height: 5px;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.form-box .multiline-input {
+  width: 100%;
+  min-height: 5px;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow-y: auto; /* Enable vertical overflow scrolling if needed */
+  resize: vertical; /* Allow vertical resizing */
+}
+
+.item-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.item-table th, .item-table td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.item-table th {
+  background-color: #f2f2f2;
+}
+
+.form-box .item-table th,
+.form-box .item-table td {
+  text-align: center;
+}
+
+.item-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: #f2f2f2;
+}
+
+.item-table tbody {
+  display: block;
+  overflow-y: auto;
+  max-height: 300px; /* Adjust as needed */
+}
+
+.item-table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.general-comments {
+  margin-top: 20px;
+}
+
+.form-box .item-table .en-descr,
+.form-box .item-table .heb-descr {
+  width: 20%;
+}
+
+.form-box .item-table .details {
+  width: 40%;
+}
+
+.form-box .item-table .remarks {
+  width: 20%; /* Adjust width as needed */
+}

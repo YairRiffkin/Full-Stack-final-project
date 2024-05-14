@@ -1,32 +1,72 @@
+import { useEffect, useState } from "react";
+import '../components/static/pendingstyle.css'
+import { DetailsDisplay } from "../components/pages/PendingHtmlElements";
+import { MyResponseContainerType, initialMyResponse } from "../models/Responsetypes";
+import { useLocalStorage } from "@uidotdev/usehooks";
+import { User } from "../models/usertypes";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
-import { useForm } from "react-hook-form"
+export type PendingDataProps = { 
+                            userDetails: User | null;
+                            userToken: string | null;
+                            }
 
-export function PendingRequest() {
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm()
-  const onSubmit = (data) => console.log(data)
+export function PendingRequest({ userDetails, userToken }: PendingDataProps) {
 
-  return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input
-        {...register("firstName", { required: true })}
-        aria-invalid={errors.firstName ? "true" : "false"}
-      />
-      {errors.firstName?.type === "required" && (
-        <p role="alert">First name is required</p>
-      )}
+    const [pendingData, setPendingData] = useState<MyResponseContainerType>(initialMyResponse);
+    const [indexed, setIndexed] = useLocalStorage<number>("Index", 1);
 
-      <input
-        {...register("mail", { required: "Email Address is required" })}
-        aria-invalid={errors.mail ? "true" : "false"}
-      />
-      {errors.mail && <p role="alert">{errors.mail.message}</p>}
+    useEffect(() => {
+        fetch(BACKEND_URL + "/items/pending", {
+            method: "POST",
+            headers:    { 
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + userToken
+                        },
+                        body: localStorage.getItem("userData"),
+            })
+        .then(response => {
+            console.log("fetch response: ", response)
+            return response.json();})
+        .then(data => {
+            console.log("register data: ", data.data);
+            setPendingData(data.data);
+        })
+        .catch((error) => alert("Error fetching pending data: " + error));
+        
+    }, [userToken]);
 
-      <input type="submit" />
-    </form>
-  )
+    const handleNext = () => {
+        setIndexed((prevIndexed) => prevIndexed + 1);
+    };
+    
+    const handleBack = () => {
+        setIndexed((prevIndexed) => (prevIndexed > 1 ? prevIndexed - 1 : 1)); // Prevent decreasing below 1
+        };
+
+    
+    console.log("index: ", indexed)
+    return (
+        <form className="pending">
+            <div className="container">
+                <div className="top-box">
+                    <>by cost center</>
+                </div>
+                <div className="buttons">
+                    <button onClick={handleBack}>Back</button>
+                    <button onClick={handleNext}>Next</button>
+                    <button>approve</button>
+                </div>
+                <div className="details-box">
+                    < DetailsDisplay pendingData = {pendingData} indexed = {indexed} />
+                </div>
+                <div className="scroll-box">
+                </div>
+                <div className="bottom-text">
+                    <textarea></textarea>
+                </div>
+            </div>
+        </form>
+    );
 }

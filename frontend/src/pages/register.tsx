@@ -13,7 +13,7 @@ export type UserDataProps = {
                             setUserDetails: (details: User | null) => void;
                             }
 
-export function NewUserRequest({ setUserDetails, userDetails }: UserDataProps) {
+export function NewUserRequest({ setUserDetails }: UserDataProps) {
   const formDetails: FormDetail[] = RegistrationFormDetails;
   const [registerForm, setRegisterForm] = useState<NewUser>({ username: "",
                                                               employee_id: "",
@@ -33,7 +33,6 @@ export function NewUserRequest({ setUserDetails, userDetails }: UserDataProps) {
 
   useEffect(() => {
     setFormComplete(CheckFormComplete(registerForm, warnings));
-    if (userDetails) { localStorage.setItem("userData", JSON.stringify(userDetails)); }
   }, [error, registerForm, warnings]);
   
   
@@ -57,10 +56,10 @@ export function NewUserRequest({ setUserDetails, userDetails }: UserDataProps) {
         [name]: value,
       }));
   };
-
   return  <form className="form-box">
             { (error) ? RegisterIssues(error) : null }
               <table>
+                <tbody>
                 {formDetails.map(( formDetail, index ) => (
                   <tr key={index}>
                       <td>
@@ -93,6 +92,7 @@ export function NewUserRequest({ setUserDetails, userDetails }: UserDataProps) {
                       </td>
                   </tr>
                 ))}
+                </tbody>
               </table>
               <button type= "submit"
                       disabled={formComplete}

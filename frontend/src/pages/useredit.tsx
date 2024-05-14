@@ -6,7 +6,7 @@ import { NewUser, User } from "../models/usertypes";
 import { useNavigate } from "react-router-dom";
 import { RegistrationFormDetails } from "../components/pages/RegistrationDisplayElements";
 import { CheckUpdateUserComplete, CheckUserUpdateInputLine } from "../components/functions/UpdateUserValidateFunctions";
-import { UpdateHomeMessage } from "../components/pages/UpdateUserDisplayElements copy";
+import { UpdateHomeMessage } from "../components/pages/UpdateUserDisplayElements";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 

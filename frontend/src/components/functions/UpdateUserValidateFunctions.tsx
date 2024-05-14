@@ -1,5 +1,4 @@
 import { NewUser } from "../../models/usertypes";
-import { RegistrationFormDetails } from "../pages/RegistrationDisplayElements";
 import { UserNameValid, EmployeeIdValid, EmailValid, SelectValid } from "./RegistrationValidateFunctions";
 
 

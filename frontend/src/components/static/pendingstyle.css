@@ -1,0 +1,70 @@
+.pending {
+  position: fixed;
+  top: 60px;
+  left: 10%;
+  width: 90%;
+  max-width: 800px;
+  height: calc(100vh - 60px); /* Adjust according to your navbar height */
+}
+
+.scroll-box,
+.bottom-text {
+  overflow-y: auto;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 90%;
+}
+
+.top-box {
+  height: 60px; /* Adjust as needed */
+  display: flex;
+  align-items: center;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 50px; /* Adjust as needed */
+  
+}
+
+.buttons button {
+  width: 20%;
+  display: flex;
+  margin: 0 5px; /* Adjust spacing between buttons */
+  height: 80%;
+  /* display: flex; */
+  justify-content:space-around;
+  margin: auto;
+  /* width: 100%; */
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: 1px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.details-box {
+  /* flex: 1; */
+  display: flex;
+  align-items: center;
+  /* justify-content: center; */
+  height: 50px;
+}
+
+.bottom-text {
+  height: 100px; /* Adjust as needed */
+}
+
+.bottom-text textarea {
+  width: 100%;
+  height: 100%;
+  resize: none;
+}

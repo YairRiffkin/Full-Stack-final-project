@@ -1,0 +1,41 @@
+
+null = None
+
+
+item_form_details: list = [
+    {"element": "input", "type": "text", "maxlength": 80, "options": null, "name": "materialNumber", "placeholder": {"en: ": "Material Number", "heb": "מקט"}},
+    {"element": "input", "type": "text", "maxlength": 80, "options": null, "name": "shortHebrewDescription", "placeholder": {"en: ": "Short Hebrew Description", "heb": "תיאור עברי מקוצר"}},
+    {"element": "input", "type": "text", "maxlength": 80, "options": null, "name": "longHebrewDescription", "placeholder": {"en: ": "Long Hebrew Description", "heb": "תיאור עברי מורחב"}},
+    {"element": "select", "type": "text", "maxlength": 80, "options": "XXX", "name": "materialType", "placeholder": {"en: ": "Material Type", "heb": "סוג מקט"}},
+    {"element": "select", "type": "text", "maxlength": 80, "options": "XXX", "name": "baseUnitOfMeasure", "placeholder": {"en: ": "Base Unit Of Measure", "heb": "יח' מידה בסיסית"}},
+    {"element": "input", "type": "text", "maxlength": 40, "options": null, "name": "oldMaterialNumber", "placeholder": {"en: ": "Old Material Number", "heb": "מקט ישן (חוגלית)"}},
+    {"element": "input", "type": "text", "maxlength": 80, "options": null, "name": "materialGroup", "placeholder": {"en: ": "Material Group", "heb": "קבוצת חומרים"}},
+    {"element": "select", "type": "text", "maxlength": 80, "options": "XXX", "name": "netWeight(Kg)", "placeholder": {"en: ": "Net Weight (Kg)", "heb": "משקל נטו"}},
+    {"element": "input", "type": "text", "maxlength": 80, "options": null, "name": "orderUnit", "placeholder": {"en: ": "Order Unit", "heb": "ORDER UNIT"}},
+    {"element": "input", "type": "text", "maxlength": 18, "options": null, "name": "internationalArticleNumber", "placeholder": {"en: ": "International Article Number", "heb": "ברקוד"}},
+    {"element": "select", "type": "text", "maxlength": 80, "options": "XXX", "name": "purchasingGroup", "placeholder": {"en: ": "Purchasing Group", "heb": "קבוצת רכש"}},
+    {"element": "input", "type": "text", "maxlength": 10, "options": null, "name": "manufacturerNumber", "placeholder": {"en: ": "Manufacturer Number", "heb": "יצרן"}},
+    {"element": "input", "type": "text", "maxlength": 40, "options": null, "name": "manufacturerPartNumber", "placeholder": {"en: ": "Manufacturer Part Number", "heb": "מס. יצרן"}},
+    {"element": "select", "type": "text", "maxlength": 80, "options": "XXX", "name": "plant", "placeholder": {"en: ": "Plant", "heb": "מפעל"}},
+    {"element": "select", "type": "text", "maxlength": 80, "options": "XXX", "name": "storageLocation", "placeholder": {"en: ": "Storage Location", "heb": "אתר אחסון"}},
+    {"element": "select", "type": "text", "maxlength": 80, "options": "XXX", "name": "profitCenter", "placeholder": {"en: ": "Profit Center ", "heb": "מרכז רווח"}},
+    {"element": "select", "type": "text", "maxlength": 80, "options": "XXX", "name": "mrpType", "placeholder": {"en: ": "Mrp Type", "heb": "סוג MRP"}},
+    {"element": "input", "type": "number", "maxlength": 13, "options": null, "name": "reorderPoint", "placeholder": {"en: ": "Reorder Point", "heb": "נק. ה.חוזרת"}},
+    {"element": "input", "type": "text", "maxlength": 80, "options": null, "name": "mrpController", "placeholder": {"en: ": "Mrp Controller", "heb": "בקר MRP"}},
+    {"element": "input", "type": "number", "maxlength": 13, "options": null, "name": "maximumStockLevel", "placeholder": {"en: ": "Maximum Stock Level", "heb": "רמת מלאי מירבית"}},
+    {"element": "select", "type": "text", "maxlength": 80, "options": "XXX", "name": "plannedDeliveryTimeInDays", "placeholder": {"en: ": "Planned Delivery Time In Days ", "heb": "ז.אספקה"}},
+    {"element": "input", "type": "text", "maxlength": 80, "options": null, "name": "shortEnglishDescription", "placeholder": {"en: ": "Short English Description", "heb": "תיאור אנגלי מקוצר"}},
+    {"element": "input", "type": "text", "maxlength": 80, "options": null, "name": "longEnglishDescription", "placeholder": {"en: ": "Long English Description", "heb": "תיאור אנגלי מורחב"}},
+    {"element": "input", "type": "text", "maxlength": 80, "options": null, "name": "supplierNumber", "placeholder": {"en: ": "Supplier Number", "heb": "ספק (מס. במערכת)"}},
+    {"element": "input", "type": "text", "maxlength": 80, "options": null, "name": "supplierName", "placeholder": {"en: ": "Supplier Name", "heb": "שם ספק"}},
+    {"element": "input", "type": "number", "maxlength": 11, "options": null, "name": "standardPrice", "placeholder": {"en: ": "Standard Price", "heb": "מחיר "}},
+    {"element": "select", "type": "text", "maxlength": 80, "options": "XXX", "name": "currency", "placeholder": {"en: ": "Currency", "heb": "מטבע"}},
+    {"element": "input", "type": "text", "maxlength": 40, "options": null, "name": "manufacturerPartNumber", "placeholder": {"en: ": "Manufacturer Part Number", "heb": "מקט ספק"}},
+    {"element": "input", "type": "text", "maxlength": 80, "options": null, "name": "quotationNumber", "placeholder": {"en: ": "Quotation Number", "heb": "מס. ה.מחיר"}},
+    {"element": "input", "type": "text", "maxlength": 80, "options": null, "name": "quotationDate", "placeholder": {"en: ": "Quotation Date", "heb": "תאריך ה.מחיר"}},
+    {"element": "input", "type": "text", "maxlength": 80, "options": null, "name": "alternativeUnitOfMeasure", "placeholder": {"en: ": "Alternative Unit Of Measure", "heb": "יחידת מידה אלטרנטיבית"}},
+    {"element": "input", "type": "number", "maxlength": 5, "options": null, "name": "denominatorForConversionToBaseUnit", "placeholder": {"en: ": "Denominator For Conversion To Base Unit", "heb": ""}},
+    {"element": "input", "type": "number", "maxlength": 5, "options": null, "name": "numeratorForConversionToBaseUnit", "placeholder": {"en: ": "Numerator For Conversion To Base Unit", "heb": ""}},
+    {"element": "input", "type": "text", "maxlength": 10, "options": null, "name": "storageBin", "placeholder": {"en: ": "Storage Bin", "heb": "איתור במחסן"}},
+    {"element": "input", "type": "text", "maxlength": 80, "options": null, "name": "valuationClass", "placeholder": {"en: ": "Valuation Class", "heb": "סיווג הערכה"}}
+    ]

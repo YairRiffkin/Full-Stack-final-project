@@ -17,7 +17,7 @@
 
   .form-box form {
     text-align: center;
-    top: 50%
+    /* top: 50% */
   }
 
   .form-box ol {
@@ -56,13 +56,13 @@
   width: 50%;
 }
   
-  .form-box input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
+.form-box input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;/* Allow text wrapping and preserve newline characters */
+}
 
   .form-box select {
     width: 100%;
@@ -76,7 +76,7 @@
     display: flex;
     justify-content: center;
     margin: auto;
-    width: 100%;
+    /* width: 100%; */
     padding: 10px;
     background-color: #007bff;
     color: #fff;
@@ -127,4 +127,9 @@
   
   .form-box .user-info p {
     margin-bottom: 10px;
+  }
+
+  .form-box table {
+    width: 100%;
+    border-collapse: collapse;
   }

@@ -1,10 +1,27 @@
 
 import datetime
 from database.db import get_db
-from database.dbelements.db_query_strings import query_insert, query_select, query_set
+from database.dbelements.db_query_strings import query_insert, query_join, query_select, query_set
 
 
 def db_fetchone(table: str,
+                select_item: list,
+                columns: list,
+                operators: list
+                ) -> dict:
+    """Perform a SELECT from the database with given parameters:
+        table name, item to look for, columns to search in and
+        parameters to look for in these columns"""
+    query_string = query_select(table, select_item, columns)
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute(query_string, operators)
+    result = cursor.fetchone()
+    # db.close()
+    return result
+
+
+def db_fetchall(table: str,
                 select_item: list,
                 columns: list,
                 operators: list
@@ -17,10 +34,11 @@ def db_fetchone(table: str,
     db = get_db()
     cursor = db.cursor()
     cursor.execute(query_string, operators)
-    user = cursor.fetchone()
-    return user
+    result = cursor.fetchall()
+    # db.close()
+    return result
 
-
+# TODO: check how to log multiple data
 def db_insert(table: str,
               columns: list,
               data_items: list,
@@ -28,13 +46,14 @@ def db_insert(table: str,
               ) -> None:
     """Insert a set of data into the relevant table"""
     query_string = query_insert(table, columns)
-    print("string: ", query_string)
     db = get_db()
     cursor = db.cursor()
     for data in data_items:
         cursor.execute(query_string, data)
+        last_id = cursor.lastrowid
+        print("last id: ", last_id)
         if log:
-            db_log(*log)
+            db_log(*log, relative=last_id)
     db.commit()
     db.close()
 
@@ -46,18 +65,19 @@ def db_log(identifier: str,         # what is the object logged identifier
            by: str,                 # user performing the action identifier
            next: str,               # who is next in line for this action
            external: bool = True,   # True if called from another INSERT db function
+           relative: int = None,    # the id of the action in the relevant database
            table: str = "history"   # log data table. default "history" table
            ) -> None:
     """Log actions in database for reference"""
     query_string = f"""INSERT INTO {table}
-                        (identifier, type, current, created, action, by, next)
-                        VALUES (?, ?, ?, ?, ?, ?, ?);"""
+                        (identifier, type, current, created, action, by, next, relative)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?);"""
     current_datetime = datetime.datetime.now()
     created = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     # Format it as YYYY-MM-DD HH:MM:SS
     db = get_db()
     cursor = db.cursor()
-    cursor.execute(query_string, (identifier, type, current, created, action, by, next))
+    cursor.execute(query_string, (identifier, type, current, created, action, by, next, relative))
     if not external:
         db.commit()
         db.close()
@@ -72,8 +92,6 @@ def db_set(table: str,
            ) -> None:
     query_string = query_set(table, columns, values)
     query_string = query_string + f"{condition_key} = {condition_value};"
-    print("set query string: ", query_string)
-    print("set log: ", log)
     db = get_db()
     cursor = db.cursor()
     cursor.execute(query_string)
@@ -81,4 +99,26 @@ def db_set(table: str,
         db_log(*log)
     db.commit()
     db.close()
-# WHERE user_id = 1;
+
+
+def db_join(leading_table: str,
+            joined_table: str,
+            selected_main: list,
+            selected_join: list,
+            join: list,
+            columns: list,
+            numbered: str,
+            operators: list
+            ) -> None:
+    query_string = query_join(leading_table,
+                              joined_table,
+                              selected_main,
+                              selected_join,
+                              join,
+                              columns,
+                              numbered)
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute(query_string, operators)
+    result = cursor.fetchall()
+    return result
