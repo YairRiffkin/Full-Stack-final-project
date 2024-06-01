@@ -2,11 +2,10 @@ import { Link } from 'react-router-dom'
 
 export function adminView() {
     return <>
-        <Link to="/item">Items List</Link>
+        <Link to="/ItemList">Items List</Link>
         <Link to="/newitem">New Item</Link>
-        <Link to="/pending">Pending Requests</Link>
-        <Link to="/userdata">Edit Users</Link>
-        <Link to="/procurement">Proc. Data</Link>
+        <Link to="/PendingItem">Pending Items</Link>
+        <Link to="/PendingUser">Pending Users</Link>
     </>
 }
 
@@ -20,7 +19,7 @@ export function userView() {
 
 export function procView() {
     return <div>
-        <Link to="/procurement">Proc. Data</Link>
+        <Link to="/Procurement">Proc. Data</Link>
     </div>
 }
 
@@ -41,7 +40,7 @@ export function navLeftView (name: string | "") {
     return <>
         <a>Welcome</a>
         <a>{ name }</a>
-        <Link to= "/userdata"><button>Edit Details</button></Link>
+        <Link to= "/useredit"><button>Edit Details</button></Link>
     </>
 }
 

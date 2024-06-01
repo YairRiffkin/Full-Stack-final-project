@@ -1,18 +1,22 @@
 
+import 'primereact/resources/themes/saga-blue/theme.css'; //theme
+import 'primereact/resources/primereact.min.css'; //core css
+import 'primeicons/primeicons.css'; //icons
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { HomePage } from './pages/homepage';
-import { LoginPage } from './pages/login';
+import { HomePage } from './pages/HomePage';
+import { LoginPage } from './pages/Login';
 import { NavigationBar } from './components/navigation-bar/navbar';
-import { ItemList } from './pages/item';
-import { NewItemLog } from './pages/new-item';
-import { PendingRequest } from './pages/pending';
-import { ProcData } from './pages/procurement';
-import { UserEdit } from './pages/useredit';
-import { NewUserRequest } from './pages/register';
-import { Logout } from './pages/logout';
+import { ItemList } from './pages/ItemList';
+import { NewItemLog } from './pages/NewItem';
+import { PendingItemRequest } from './pages/PendingItem';
+import { ProcData } from './pages/Procurement';
+import { UserEdit } from './pages/UserEdit';
+import { NewUserRequest } from './pages/Register';
+import { Logout } from './pages/Logout';
 import { useEffect } from 'react';
 import { User } from './models/usertypes';
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { PendingUserRequest } from './pages/PendingUser';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -38,11 +42,12 @@ export default function App() {
           <Routes>          
             <Route path="/" element={<HomePage userDetails={userDetails}/>} />
             <Route path="/login" element={<LoginPage setUserToken={setUserToken}/>} />
-            <Route path="/item" element={<ItemList />} />
+            <Route path="/ItemList" element={<ItemList userToken={ userToken}/>} />
+            <Route path="/UserEdit" element={<UserEdit userDetails={userDetails} userToken={ userToken}/>} />
             <Route path="/newitem" element={<NewItemLog userToken={ userToken} userDetails={userDetails}/>} />
-            <Route path="/pending" element={<PendingRequest userToken={ userToken} userDetails={userDetails}/>} />
-            <Route path="/procurement" element={<ProcData />} />
-            <Route path="/userdata" element={<UserEdit userToken={ userToken} userDetails={userDetails}/>} />
+            <Route path="/PendingItem" element={<PendingItemRequest userToken={ userToken} />} />
+            <Route path="/Procurement" element={<ProcData userToken={ userToken} />} />
+            <Route path="/PendingUser" element={<PendingUserRequest userToken={ userToken} />} />
             <Route path="/register" element={<NewUserRequest setUserDetails={setUserDetails} userDetails={userDetails}/>} />
             <Route path="/logout" element={<Logout />} />
           </Routes>

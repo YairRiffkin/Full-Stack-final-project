@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import '../components/static/pagestyle.css'
+import '../components/static/GeneralPage.css'
 import { FormDetail } from "../models/formtypes";
 import { RegistrationFormDetails } from "../components/pages/RegistrationDisplayElements";
 import { CheckFormComplete, CheckInputLine, RegisterIssues, SetDefaultWarning, WarningDisplay } from "../components/functions/RegistrationValidateFunctions";
@@ -56,7 +56,7 @@ export function NewUserRequest({ setUserDetails }: UserDataProps) {
         [name]: value,
       }));
   };
-  return  <form className="form-box">
+  return  <form className="display-box">
             { (error) ? RegisterIssues(error) : null }
               <table>
                 <tbody>

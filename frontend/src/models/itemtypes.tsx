@@ -32,42 +32,84 @@ export type Item = {
     supplierPartNumber: string | null
     quotationNumber: string | null
     quotationDate: string | null
+    status: string | null
     
 }
 
+export type ItemContainerType = {
+    [key: number]: Item | null;
+  };
+
+export type ItemWithID = Item & {
+    id: number;
+}
+
+// export const newItem = {
+//     materialNumber: "",
+//     shortHebrewDescription: "ציר Q30 אורך לגיר של פושר אריזה קו חמש 104033191",
+//     longHebrewDescription: "ציר Q30 L=226 ממ לגיר של פושר אריזה קו5 ",
+//     materialType: "Z104",
+//     baseUnitOfMeasure: "PC",
+//     oldMaterialNumber: "0",
+//     materialGroup: "610",
+//     netWeight: "0.001",
+//     orderUnit: "PC",
+//     purchasingGroup: "E65",
+//     manufacturerNumber: "MACDUE",
+//     manufacturerPartNumber: "104033191",
+//     plant: "4631",
+//     storageLocation: "4000",
+//     storageBin: "0",
+//     profitCenter: "B27912",
+//     mrpType: "VB",
+//     reorderPoint: "1",
+//     mrpController: "Z28",
+//     maximumStockLevel: "1",
+//     plannedDeliveryTimeInDays: "56",
+//     shortEnglishDescription: "104033191 SHAFT MVF 637F (30X226) FOR PUSHER M80",
+//     longEnglishDescription: "104033191 SHAFT 30X226 FOR GEAR MVF 637F",
+//     supplierNumber: "19105202",
+//     supplierName: "MACDUE",
+//     standardPrice: "119.54",
+//     currency: "EURO",
+//     supplierPartNumber: "104033191",
+//     quotationNumber: "OR-21362",
+//     quotationDate: "06.09.2021",
+//     status: null
+//     }
+
 export const newItem = {
     materialNumber: "",
-    shortHebrewDescription: "ציר Q30 אורך לגיר של פושר אריזה קו חמש 104033191",
-    longHebrewDescription: "ציר Q30 L=226 ממ לגיר של פושר אריזה קו5 ",
-    materialType: "Z104",
-    baseUnitOfMeasure: "PC",
-    oldMaterialNumber: "0",
-    materialGroup: "610",
-    netWeight: "0.001",
-    orderUnit: "PC",
-    purchasingGroup: "E65",
-    manufacturerNumber: "MACDUE",
-    manufacturerPartNumber: "104033191",
-    plant: "4631",
-    storageLocation: "4000",
-    storageBin: "0",
-    profitCenter: "B27912",
-    mrpType: "VB",
-    reorderPoint: "1",
-    mrpController: "Z28",
-    maximumStockLevel: "1",
-    plannedDeliveryTimeInDays: "56",
-    shortEnglishDescription: "104033191 SHAFT MVF 637F (30X226) FOR PUSHER M80",
-    longEnglishDescription: "104033191 SHAFT 30X226 FOR GEAR MVF 637F",
-    supplierNumber: "19105202",
-    supplierName: "MACDUE",
-    standardPrice: "119.54",
-    currency: "EURO",
-    supplierPartNumber: "104033191",
-    quotationNumber: "OR-21362",
-    quotationDate: "06.09.2021"
-
-
+    shortHebrewDescription: "",
+    longHebrewDescription: "",
+    materialType: "",
+    baseUnitOfMeasure: "",
+    oldMaterialNumber: "",
+    materialGroup: "",
+    netWeight: "",
+    orderUnit: "",
+    purchasingGroup: "",
+    manufacturerNumber: "",
+    manufacturerPartNumber: "",
+    plant: "",
+    storageLocation: "",
+    storageBin: "",
+    profitCenter: "",
+    mrpType: "",
+    reorderPoint: "",
+    mrpController: "",
+    maximumStockLevel: "",
+    plannedDeliveryTimeInDays: "",
+    shortEnglishDescription: "",
+    longEnglishDescription: "",
+    supplierNumber: "",
+    supplierName: "",
+    standardPrice: "",
+    currency: "",
+    supplierPartNumber: "",
+    quotationNumber: "",
+    quotationDate: "",
+    status: null
     }
 
 export function initializeItem(): Item {
@@ -75,7 +117,7 @@ export function initializeItem(): Item {
     const parsedUserDetails = userDataString ? JSON.parse(userDataString) : null;
     const location = parsedUserDetails.location;
     const itemFormDetails: ItemFormDetail[] = ItemFormDetails;
-    const initialItem = newItem;
+    const initialItem: Item = newItem;
     (Object.keys(initialItem) as (keyof Item)[]).forEach((key) => {
         itemFormDetails.map(( itemDetail ) => {
             if (itemDetail.name === key && itemDetail.options) {
@@ -88,6 +130,5 @@ export function initializeItem(): Item {
             }
         });
       });
-    console.log(initialItem)
     return initialItem;
 }

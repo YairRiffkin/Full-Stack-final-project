@@ -1,7 +1,7 @@
 
 import datetime
 from database.db import get_db
-from database.dbelements.db_query_strings import query_insert, query_join, query_select, query_set
+from database.dbelements.db_query_strings import query_insert, query_select, query_set, query_set_if_exists
 
 
 def db_fetchone(table: str,
@@ -30,7 +30,6 @@ def db_fetchall(table: str,
         table name, item to look for, columns to search in and
         parameters to look for in these columns"""
     query_string = query_select(table, select_item, columns)
-    print("db fetch string: ", query_string, operators)
     db = get_db()
     cursor = db.cursor()
     cursor.execute(query_string, operators)
@@ -51,11 +50,10 @@ def db_insert(table: str,
     for data in data_items:
         cursor.execute(query_string, data)
         last_id = cursor.lastrowid
-        print("last id: ", last_id)
         if log:
             db_log(*log, relative=last_id)
     db.commit()
-    db.close()
+    # db.close()
 
 
 def db_log(identifier: str,         # what is the object logged identifier
@@ -77,10 +75,13 @@ def db_log(identifier: str,         # what is the object logged identifier
     # Format it as YYYY-MM-DD HH:MM:SS
     db = get_db()
     cursor = db.cursor()
+    print("IN LOG", external)
     cursor.execute(query_string, (identifier, type, current, created, action, by, next, relative))
     if not external:
+        print("LOG COMMIT")
+        print("query: ", query_string, identifier, type, current, created, action, by, next, relative)
         db.commit()
-        db.close()
+        # db.close()
 
 
 def db_set(table: str,
@@ -88,17 +89,30 @@ def db_set(table: str,
            values: list,
            condition_value: str,
            condition_key: str = "id",
-           log: list = None
+           log: list = None,
+           if_exists: bool = False
            ) -> None:
-    query_string = query_set(table, columns, values)
-    query_string = query_string + f"{condition_key} = {condition_value};"
+    if if_exists:
+        columns.insert(0, condition_key)
+        values.insert(0, condition_value)
+        query_string = query_set_if_exists(table, columns, values)
+    else:
+        query_string = query_set(table, columns, values)
+        query_string = query_string + f"{condition_key} = {condition_value};"
     db = get_db()
     cursor = db.cursor()
+    print("query string: ", query_string)
     cursor.execute(query_string)
     if log:
-        db_log(*log)
+        print("LOGGING")
+        relative = None
+        if condition_key == "id":
+            relative = condition_value
+            print("relative: ", relative)
+        db_log(*log, relative=relative)
     db.commit()
-    db.close()
+    print("COMMIT")
+    # db.close()
 
 
 def db_join(leading_table: str,
@@ -122,3 +136,11 @@ def db_join(leading_table: str,
     cursor.execute(query_string, operators)
     result = cursor.fetchall()
     return result
+
+
+def db_maxSKU() -> int:
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT MAX(CAST(SKU AS INTEGER)) FROM itemsbasic;")
+    result = cursor.fetchone()
+    return int(result[0]) if result and result[0] is not None else None

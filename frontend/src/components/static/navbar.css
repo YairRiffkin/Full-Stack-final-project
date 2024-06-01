@@ -9,7 +9,7 @@
  }
 
 
-.navbar {
+ .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -17,8 +17,15 @@
   padding: 10px;
   position: fixed;
   top: 0;
-  width: 100%
+  width: 100%;
+  max-height: 50px; /* Set maximum height */
 }
+
+.navbar * {
+  flex: 1 1 auto; /* Equivalent to flex: 1; */
+}
+
+
 
 
 .navbar > div:nth-child(1) {

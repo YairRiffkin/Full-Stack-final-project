@@ -1,9 +1,14 @@
 import { ItemFormDetail } from "../../models/formtypes";
-import { Item, NewItem, initializeItem, newItem } from "../../models/itemtypes";
-import { ItemFormDetails, notRequired } from "../pages/ItemFormDisplayElements";
+import { Item, initializeItem } from "../../models/itemtypes";
+import { CostCenterList, ItemFormDetails, LocationList, MaterialTypeList, StorageLocList, notRequired } from "../pages/ItemFormDisplayElements";
 
 export function CheckItemLine(name: string, value: string) {
-  console.log("name: ", name, "value: ", value);
+  /*Checking a single input for:
+      1. Where select has not been chosen.
+      2. No leading or lagging spaces.
+      3. English description contain only english characters.
+      4. Required data is not left out. */
+
   let warning = "";
   if (value) {
     const trimmedValue = value.trim();
@@ -22,16 +27,19 @@ export function CheckItemLine(name: string, value: string) {
   return warning
 }
 
-export function CheckItemComplete(form: NewItem, warnings: string[]) {
+export function CheckItemComplete(warnings: string[]) {
+  /*Checking if no errors exist before allowing submit*/
   let result: boolean = false;
-  // console.log("warnings: ", warnings)
-  warnings.map((warning) => {
-    if (warning !== "") { result = true; }
-  });
-  return false
+  if (warnings && Array.isArray(warnings)) {
+    warnings.forEach((warning) => {
+      if (warning !== "") { result = true; }
+    });
+  }
+  return result
 }
 
 export function ItemDefaultWarning() {
+  /*Default warning list to allow showing errors at first render */
     const warnings: string[] = [];
     const string1: string = "You must choose an option";
     const string2: string = "Data is required";
@@ -47,14 +55,12 @@ export function ItemDefaultWarning() {
             } else {
               warnings[index] = itemRequired ? string2 : "";
             }
-            
-
-        });
+    });
   return warnings;
 }
 
 export function ItemWarningDisplay(warning: string | null) {
-  // console.log("in display warnings", warning)
+  /*Display warning in form */
   if (warning) {
     return (
           <>
@@ -67,6 +73,7 @@ export function ItemWarningDisplay(warning: string | null) {
 }
 
 export function ItemIssues(error: string[]) {
+  /*Displaying backend errors on top of form before submission */
   return  <small>Please address the below issues before submitting: 
             <ol>
               { error.map((item, index) => (
@@ -75,4 +82,29 @@ export function ItemIssues(error: string[]) {
             </ol>
           </small>
 }
+
+export function DefaultDisplay(name: string, value: string) {
+  console.log("name: ", name, "value: ", value);
+  const correction: { [key: string]: string | null | undefined } = {};
+
+  if (name.trim() === "plant") {
+    const defaultValue = LocationList.find(item => item.choice === value.trim());
+    console.log("default value: ", defaultValue);
+    const newChoice = CostCenterList.find(item => item.description === defaultValue?.description);
+    console.log("new choice: ", newChoice)
+    correction.profitCenter = newChoice?.choice ?? null;
+    console.log("correction: ", correction);
+  }
+  if (name.trim() === "materialType") {
+    const defaultValue = MaterialTypeList.find(item => item.choice === value.trim());
+    console.log("default value: ", defaultValue);
+    const newChoice = StorageLocList.find(item => item.description === defaultValue?.description);
+    console.log("new choice: ", newChoice)
+    correction.storageLocation = newChoice?.choice ?? null;
+    console.log("correction: ", correction);
+  }
+
+  return correction;
+}
+
 

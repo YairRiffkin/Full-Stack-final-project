@@ -1,5 +1,5 @@
 import { NewUser } from "../../models/usertypes";
-import { UserNameValid, EmployeeIdValid, EmailValid, SelectValid } from "./RegistrationValidateFunctions";
+import { UserNameValid, EmployeeIdValid, EmailValid, SelectValid, PasswordValid, PasswordVerify } from "./RegistrationValidateFunctions";
 
 
 
@@ -13,21 +13,21 @@ export function CheckUserUpdateInputLine(name: string, value: string, value1: st
     warning = EmailValid(value);}
   if (name === "role" || name === "location") {
     warning = SelectValid(value);}
-  // if (name === "password1") {
-  //   warning = PasswordValid(value);}
-  // if (name === "password2") {
-  //   warning = PasswordVerify(value, value1);}
+  if (name === "password1") {
+    warning = PasswordValid(value);}
+  if (name === "password2") {
+    warning = PasswordVerify(value, value1);}
   console.log("check input line warning: ", warning)
   return warning;
 }
 
-export function CheckUpdateUserComplete(form: NewUser, warnings: string[]) {
+export function CheckUpdateUserComplete(form: NewUser, warnings: string[], passwordUpdate: boolean) {
   let result: boolean = false;
   warnings.map((warning) => {
     if (warning !== "") { result = true; }
   });
   const formCheck = Object.keys(form).some((key) => {
-    if (key === "password1" || key === "password2") {
+    if (!passwordUpdate && (key === "password1" || key === "password2")) {
       return false
     }
     return form[key] === null || form[key] === undefined || form[key] === '';

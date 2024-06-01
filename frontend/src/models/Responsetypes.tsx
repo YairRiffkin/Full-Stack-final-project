@@ -1,9 +1,10 @@
 
 export type MyResponseType = {
     created: string;
-    relative: number;
+    action: string;
     by: string;
     username: string;
+    relative: string;
   }
 
 
@@ -12,10 +13,4 @@ export type MyResponseContainerType = {
   };
 
 
-  export const initialMyResponse = {
-    1: {
-    created: "",
-    relative: 0,
-    by: "",
-    username: "",
-  }}
+  

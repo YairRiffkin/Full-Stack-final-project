@@ -4,7 +4,8 @@
   box-sizing: border-box;
 }
 
-.form-box {
+.item-box{
+  color: black !important;
   width: auto;
   max-width: 80%;
   margin: 0 auto;
@@ -12,24 +13,51 @@
   border: 1px solid #ccc;
   border-radius: 8px;
   background-color: #f9f9f9;
+  height: 80vh;
 }
 
-.form-box form {
+.item-box form {
   text-align: center;
 }
 
-.form-box input {
+.item-box input {
+  color: black !important;
   width: 100%; 
-  min-height: 5px;
+  min-height: 40px;
   padding: 10px;
   margin-bottom: 15px;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
 
-.form-box .multiline-input {
+.item-box button[type="submit"] {
+  display: block;
+  margin: auto;
+  min-width: 100px;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+
+.item-box button[type="submit"]:disabled  {
+  background-color: #8c939b;
+  color: #b30c0c;
+  cursor: not-allowed;
+}
+
+.item-box button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+.item-box.multiline-input {
   width: 100%;
-  min-height: 5px;
+  min-height: 40px;
   padding: 10px;
   margin-bottom: 15px;
   border: 1px solid #ddd;
@@ -41,6 +69,7 @@
 .item-table {
   width: 100%;
   border-collapse: collapse;
+  height: 60vh;
 }
 
 .item-table th, .item-table td {
@@ -53,8 +82,8 @@
   background-color: #f2f2f2;
 }
 
-.form-box .item-table th,
-.form-box .item-table td {
+.item-box.item-table th,
+.item-box.item-table td {
   text-align: center;
 }
 
@@ -66,10 +95,10 @@
 }
 
 .item-table tbody {
-  display: block;
-  overflow-y: auto;
-  max-height: 300px; /* Adjust as needed */
-}
+    display: block;
+    overflow-y: auto;
+    max-height: 50vh; /* Set max height to 50% of viewport height */
+  }
 
 .item-table tbody tr {
   display: table;
@@ -81,15 +110,15 @@
   margin-top: 20px;
 }
 
-.form-box .item-table .en-descr,
-.form-box .item-table .heb-descr {
+.item-box.item-table .en-descr,
+.item-box.item-table .heb-descr {
   width: 20%;
 }
 
-.form-box .item-table .details {
+.item-box.item-table .details {
   width: 40%;
 }
 
-.form-box .item-table .remarks {
+.item-box.item-table .remarks {
   width: 20%; /* Adjust width as needed */
 }

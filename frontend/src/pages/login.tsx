@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import '../components/static/pagestyle.css'
+import '../components/static/GeneralPage.css'
 
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
@@ -20,7 +20,7 @@ export function LoginPage({ setUserToken }: UserDataProps ) {
         (usernameRef.current?.value && passwordRef.current?.value)? setInputStatus(false): setInputStatus(true);
     }
     
-    return <div className="form-box">
+    return <div className="display-box">
             <h2>Please login with your email or employee id as username</h2>
             <input 
                 type="text" 

@@ -38,18 +38,21 @@ class Item:
     quotationDate: str | None
     status: str = "pending"
 
+    # Possible locations of item handlers
     locations = {"Afula": "4630",
                  "Nahariya": "4631",
                  "Hadera": "4632",
                  "Gilboa": "4643"
                  }
 
+    # Corresponding cost centers
     cost_center = {"4630": "B27712",
                    "4631": "B27912",
                    "4632": "B27812",
                    "4643": "B28012"
                    }
 
+    # Standard characteristics for item data attributes
     parameters = {
         "materialNumber": {"maxlength": 8, "required": False},
         "shortHebrewDescription": {"maxlength": 40, "required": False},
@@ -83,6 +86,7 @@ class Item:
         "quotationDate": {"maxlength": 80, "required": True}
     }
 
+    # The corresponding database column headers for transfer of data
     database_columns = ["SKU",
                         "short_hebrew",
                         "long_hebrew",
@@ -116,22 +120,50 @@ class Item:
                         "status"
                         ]
 
-    def check_space(self, item: str) -> list:
-        error_string = "You have leading or lagging spaces"
-        return [error_string, item.startswith(' ') or item.endswith(' ')]
+    def check_space(self, detail: str) -> list[str, bool]:
+        """Leading or lagging spaces not allowed
+        Args:
+            detail (str): Item detail to be checked
 
-    def check_required(self, attr: str, item: str) -> list:
+        Returns:
+            list: error, if exists and boolean result
+        """
+        error_string = "You have leading or lagging spaces"
+        return [error_string, detail.startswith(' ') or detail.endswith(' ')]
+
+    def check_required(self, attr: str, detail: str) -> list[str, bool]:
+        """All required fields should have data
+        Args:
+            attr (str): Item attribute
+            detail (str): Attribute data
+        Returns:
+            list: error, if exists and boolean result
+        """
         error_string = "Not all required fields are filled"
+        # Refers to required attribute list in the class definition
         required = self.parameters[attr]["required"]
-        convert_item = item == "None" or item == ""
+        convert_item = detail == "None" or detail == ""
         return [error_string, required and convert_item]
 
-    def check_costcenter(self, item: str) -> list:
+    def check_costcenter(self, detail: str) -> list[str, bool]:
+        """Cost center must match location
+        Args:
+            detail (str): Attribute data
+
+        Returns:
+            list: error, if exists and boolean result
+        """
         error_string = "Location and cost center don't match"
-        not_match = self.profitCenter != self.cost_center[item]
+        not_match = self.profitCenter != self.cost_center[detail]
         return [error_string, not_match]
 
     def check_item(self) -> list:
+        """Check details validity
+        Check all attribute of Item to be compliant with standard
+
+        Returns:
+            list: errors, if exist
+        """
         error = []
         for detail in self.__annotations__:
             if detail == "id" or detail == "status" or detail == "materialNumber":
@@ -142,6 +174,7 @@ class Item:
                 error.append(check[0])
             check = self.check_required(str(detail), value)
             if check[1] and check[0] not in error:
+                print("detail: ", detail)
                 error.append(check[0])
             if detail == "plant":
                 check = self.check_costcenter(value)
@@ -149,17 +182,29 @@ class Item:
                     error.append(check[0])
         return error
 
-    def item_is_duplicate(self):
+    def item_is_duplicate(self) -> bool:
+        """If item has duplicate
+        Item uniqueness is just by manufacturer part number from same supplier number.
+        Returns:
+            bool: True or False
+        """
         is_duplicate = False
-        item = db_fetchone("itemsbasic", ["id"], ["employee_id"], [self.employee_id])
-        if item:
-            is_duplicate = True
-        item = db_fetchone("items", ["id"], ["email"], [self.email])
+        item = db_fetchone("itemsbasic", ["id"], ["man_part_num", "supplier_num"], [self.manufacturerPartNumber, self.supplierNumber])
+        print("duplicate item", item)
         if item:
             is_duplicate = True
         return is_duplicate
 
     def make_db_data(self, status: str) -> list:
+        """Prepares data in database format.
+        Args:
+            status (str): status of item depending on action performed.
+
+        Returns:
+            list: 2 lists:
+                columns -> for sqlite query of columns to update,
+                data -> corresponding data.
+        """
         self.status = status
         class_dict = asdict(self)
         class_dict.pop("id")

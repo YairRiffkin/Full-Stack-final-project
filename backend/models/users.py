@@ -17,7 +17,22 @@ class User:
     user_level: str | None
 
     locations = ["Tzrifin", "Afula", "Gilboa", "Hadera", "Nahariya"]
-    roles = ["MRP Controller", "Warehouse Manager", "Engineer", "Mech. Maintenance", "Elec. Maintenance", "Other"]
+    roles = ["MRP Controller",
+             "Warehouse Manager",
+             "Engineer",
+             "Mech. Maintenance",
+             "Elec. Maintenance",
+             "Other"
+             ]
+    database_columns = [
+                        "username",
+                        "employee_id",
+                        "email",
+                        "phone_number",
+                        "location",
+                        "role",
+                        "user_level"
+                        ]
 
     def check_name(self):
         exceptions = []

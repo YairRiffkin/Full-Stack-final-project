@@ -10,6 +10,10 @@ export type User = {
     user_level: string | null
 }
 
+export type UserContainerType = {
+    [key: number]: User | null;
+  };
+
 export type NewUser = {
     [key: string]: string | undefined;
     username: string

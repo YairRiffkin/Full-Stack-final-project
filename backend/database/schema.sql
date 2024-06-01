@@ -26,23 +26,28 @@ CREATE TABLE IF NOT EXISTS history (
     relative INTEGER
 );
 
+CREATE TABLE IF NOT EXISTS comments (
+    id INTEGER UNIQUE NOT NULL,
+    comment TEXT
+);
+
 CREATE TABLE IF NOT EXISTS itemsbasic (
     id INTEGER PRIMARY KEY NOT NULL,
     SKU INTEGER UNIQUE,
-    short_hebrew TEXT NOT NULL,
-    long_hebrew TEXT NOT NULL,
+    short_hebrew TEXT,
+    long_hebrew TEXT,
     mat_type TEXT NOT NULL,
     unit_of_measure TEXT NOT NULL,
-    old_number TEXT NOT NULL,
+    old_number TEXT,
     mat_group TEXT NOT NULL,
-    net_weight TEXT NOT NULL,
+    net_weight TEXT,
     order_unit TEXT NOT NULL,
     purch_group TEXT NOT NULL,
     manufacturer_num TEXT NOT NULL,
     man_part_num TEXT NOT NULL,
     plant TEXT NOT NULL,
     stor_loc TEXT NOT NULL,
-    bin TEXT NOT NULL,
+    bin TEXT,
     profit_center TEXT NOT NULL,
     mrp_type TEXT NOT NULL,
     reorder_pnt TEXT NOT NULL,

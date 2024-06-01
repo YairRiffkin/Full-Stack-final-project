@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import '../components/static/pagestyle.css'
+import '../components/static/GeneralPage.css'
 import { FormDetail } from "../models/formtypes";
 import { RegisterIssues, WarningDisplay } from "../components/functions/RegistrationValidateFunctions";
 import { NewUser, User } from "../models/usertypes";
 import { useNavigate } from "react-router-dom";
 import { RegistrationFormDetails } from "../components/pages/RegistrationDisplayElements";
 import { CheckUpdateUserComplete, CheckUserUpdateInputLine } from "../components/functions/UpdateUserValidateFunctions";
-import { UpdateHomeMessage } from "../components/pages/UpdateUserDisplayElements";
+import { UpdateHomeMessage, UpdatePassword } from "../components/pages/UpdateUserDisplayElements";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -16,31 +16,31 @@ export type UserDataProps = {
                             }
 
 export function UserEdit({ userDetails, userToken }: UserDataProps) {
-  //TODO: add "update password" feature
   const formDetails: FormDetail[] = RegistrationFormDetails;
   const userData = localStorage.getItem("userData");
   const defaultForm = userData ? JSON.parse(userData) : null;
   const [registerForm, setRegisterForm] = useState<NewUser>({ username: defaultForm?.username || "",
                                                               employee_id: defaultForm?.employee_id || "",
                                                               email: defaultForm?.email || "",
-                                                              location: defaultForm?.location || "",
+                                                              location: defaultForm?.location || "--Choose--",
                                                               phone_number: defaultForm?.phone_number || "",
-                                                              role: defaultForm?.role || "",
+                                                              role: defaultForm?.role || "--Choose--",
                                                               password1: "",
                                                               password2: ""
                                                             })
   const [warnings, setWarnings] = useState<(string)[]>(Array(formDetails.length).fill(""));
   const [error, setError] = useState<string[] | null>(null)
   const [formComplete, setFormComplete] = useState<boolean>(true);
+  const [passwordUpdate, setPasswordUpdate] = useState(false)
   const navigate = useNavigate();
 
   useEffect(() => {
-    setFormComplete(CheckUpdateUserComplete(registerForm, warnings));
-    // setUpdatePassword(updateClick ? true : false)
-  }, [error, registerForm, userDetails, warnings]);  
+    setFormComplete(CheckUpdateUserComplete(registerForm, warnings, passwordUpdate));
+  }, [error, passwordUpdate, registerForm, userDetails, warnings]);  
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const index = formDetails.findIndex((detail) => detail.name === e.target.name);
+    console.log("target value: ", e.target.value)
     const newWarning = CheckUserUpdateInputLine(String(e.target.name),
                                       e.target.value,
                                       e.target.name === "password2" ? 
@@ -60,15 +60,26 @@ export function UserEdit({ userDetails, userToken }: UserDataProps) {
     }));
   };
 
-  return  <form className="form-box">
+  return  <form className="display-box">
             { (error) ? RegisterIssues(error) : null }
               <table>
                 <tbody>
                   {formDetails.map(( formDetail, index ) => {
-                    if (formDetail.name === 'password1' || formDetail.name === 'password2') {
-                      return null;
+                    
+                    if (formDetail.name === 'password2') {
+                      return null
                     }
-          
+                    if (!passwordUpdate && (formDetail.name === 'password1' || formDetail.name === 'password2')) {
+                      return null
+                    }
+                    if ( passwordUpdate && formDetail.name === 'password1') {
+                      return <UpdatePassword 
+                                              key = { index } 
+                                              index={ index } 
+                                              handleChange = { handleChange} 
+                                              warnings = { warnings } 
+                                              userToken = { userToken }/>
+                    }
                     return (
                     <tr key={index}>
                       <td>{ formDetail.placeholder }</td>
@@ -110,6 +121,15 @@ export function UserEdit({ userDetails, userToken }: UserDataProps) {
                   })}
                 </tbody>
               </table>
+              <div className="button-container">
+                <button type= "submit"
+                  onClick={(e) => {
+                                  e.preventDefault();
+                                  setPasswordUpdate(prevState => !prevState);
+                                }}
+                >
+                  {passwordUpdate? "Close" : "Password"}
+                </button>
                 <button type= "submit"
                         disabled={formComplete}
                         onClick={(e) => {
@@ -138,7 +158,7 @@ export function UserEdit({ userDetails, userToken }: UserDataProps) {
                 >
                   { formComplete ? <span>Complete the form</span> :<strong>UPDATE</strong> }
                 </button>
-            
+            </div>
           </form>;
     
 }

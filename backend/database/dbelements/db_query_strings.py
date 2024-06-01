@@ -46,44 +46,29 @@ def query_set(table: str, columns: list, values: list) -> str:
     return result
 
 
-def query_join(leading_table: str,
-               joined_table: str,
-               selected_main: list,
-               selected_join: list,
-               join: list,
-               columns: list,
-               numbered: str
-               ) -> str:
-    """Create SELECT - JOIN command to database:
-        SELECT table.selected1, table.selected2...
-        FROM leading_table
-        JOIN joined_table ON main_table.join[0] = joined_table.join[1]
-        WHERE columns1 = ? AND columns2 = ? AND ... ;
+def query_set_if_exists(table: str, columns: list, values: list) -> str:
+    """Create SET command to database - if identifier column exists it updates the value, if not it creates a new row:
+        INSERT INTO your_table_name (column1 {identifier}, column2, ...)
+        VALUES (value1, value2, ...)
+        ON CONFLICT(column1) DO UPDATE SET
+        column2 = excluded.column2,
+        ... ,
     """
-    main = []
-    joined = []
-    for select in selected_main:
-        main.append(leading_table + "." + select)
-    for select in selected_join:
-        joined.append(joined_table + "." + select)
-    columns = [leading_table + "." + item for item in columns]
-    numbered = leading_table + "." + numbered
-    join[0] = leading_table + "." + join[0]
-    join[1] = joined_table + "." + join[1]
-    result = f" SELECT ROW_NUMBER() OVER (ORDER BY {numbered}) AS id, "
     add_comma = ""
-    for item in main:
-        result = result + add_comma + item
-        add_comma = ", "
-    for item in joined:
-        result = result + add_comma + item
-        add_comma = ", "
-    result = result + f" FROM {leading_table}"
-    result = result + f" JOIN {joined_table} ON {join[0]} = {join[1]} "
-    result = result + "WHERE "
-    add_and = ""
+    result = f"INSERT INTO {table} ("
     for column in columns:
-        result = result + add_and + f"{column} = ?"
-        add_and = " AND "
+        result = result + add_comma + column
+        add_comma = ", "
+    result = result + ") VALUES ("
+    add_comma = ""
+    for value in values:
+        result = result + add_comma + value
+        add_comma = ", "
+    result = result + F") ON CONFLICT ({columns[0]}) DO UPDATE SET "
+    add_comma = ""
+    for column in columns[1:]:
+        result = result + add_comma + f"{column} = excluded.{column}"
+        add_comma = ", "
     result = result + ";"
+    print("QUERY SET IF: ", result)
     return result

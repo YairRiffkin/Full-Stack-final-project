@@ -13,6 +13,7 @@
     "@uidotdev/usehooks": "^2.4.1",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.4",
+    "primereact": "^10.6.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.4",

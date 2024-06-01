@@ -22,3 +22,19 @@ export type FormDetail = {
                   heb: string;
                   } 
   }
+
+  export type ProcurementFormDetail = {
+    name: string;
+    placeholder:  {
+                  en: string;
+                  heb: string;
+                  } 
+  }
+
+  export type ItemListForm = {
+    name: string;
+    placeholder:  {
+                  en: string;
+                  heb: string;
+                  } 
+  }

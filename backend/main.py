@@ -1,12 +1,12 @@
 
-from flask import Flask, g, jsonify
-import logging
+from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from database.db import close_db, init_db
 from views.auth import auth
 from views.users import users
 from views.items import items
+from views.procurement import procurement
 
 app = Flask(__name__)
 app.config.from_prefixed_env()
@@ -18,6 +18,7 @@ app.teardown_appcontext(close_db)
 app.register_blueprint(auth.bp)
 app.register_blueprint(users.bp)
 app.register_blueprint(items.bp)
+app.register_blueprint(procurement.bp)
 
 
 # @app.errorhandler(Exception)

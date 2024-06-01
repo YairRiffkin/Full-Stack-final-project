@@ -1,7 +1,12 @@
+import { Dispatch, SetStateAction } from "react";
 import { ItemFormDetail } from "../../models/formtypes";
 import { Item } from "../../models/itemtypes";
 import { User } from "../../models/usertypes";
-import { FetchWithToken } from "../functions/FetchFunctions";
+import { CheckItemLine } from "../functions/ItemValidateFunctions";
+import { DemoData } from "../static/DemoData";
+import { CostCenterList, LocationList } from "./ItemFormDisplayElements";
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 export type ItemTrLeadColumnsProps = {
   itemDetail: ItemFormDetail;
@@ -25,12 +30,14 @@ export type ItemSelectProps = {
                                         >) => void;
   userDetails: User | null;
   itemForm: Item;
+  userLevel: string | null;
 }
 
 export type ButtonProps = { 
   itemComplete: boolean;
   setError: React.Dispatch<React.SetStateAction<string[] | null>>;
   itemForm: Item;
+  userToken: string | null;
 }
 
 export function ItemTrHeader() {
@@ -59,35 +66,38 @@ export function ItemTrLeadColumns( { itemDetail} : ItemTrLeadColumnsProps) {
 }
 
 export function ItemInputInput({ itemDetail, handleChange, itemForm }: ItemInputProps) {
+  // console.log("INPUT ==> name: ", itemDetail.name, "value: ", itemForm[itemDetail.name as keyof Item])
   return (
     <input
       type= {itemDetail.type}
       name={itemDetail.name}
       maxLength={itemDetail.maxlength}
-      defaultValue={(itemForm[itemDetail.name as keyof Item] || '') as string}
+      value={itemForm[itemDetail.name as keyof Item] || ''}
       onChange={handleChange}
     />
   );
 }
 
 export function ItemTextAreaInput({ itemDetail, handleChange, itemForm }: ItemInputProps) {
+  // console.log("TEXTAREA ==> name: ", itemDetail.name, "value: ", itemForm[itemDetail.name as keyof Item])
   return (
     <textarea
       className="multiline-input"
       name={itemDetail.name}
       maxLength={itemDetail.maxlength}
-      defaultValue={(itemForm[itemDetail.name as keyof Item] || '') as string}
+      value={itemForm[itemDetail.name as keyof Item] || ''}
       onChange={handleChange}
     />
   );
 }
 
-export function ItemSelectInput({ itemDetail, handleChange, itemForm }: ItemSelectProps) {
+export function ItemSelectInput({ itemDetail, handleChange, itemForm, userLevel }: ItemSelectProps) {
   return (
     <select 
+      disabled= { (itemDetail.name === "plant" && userLevel !== "admin") ? true : false }
       name={itemDetail.name} 
+      value={itemForm[itemDetail.name as keyof Item] || ''}
       onChange={(e) => handleChange(e)} 
-      value={(itemForm[itemDetail.name as keyof Item] || '') as string}
     >
       {itemDetail.options?.map((option) => {
         return (
@@ -100,26 +110,82 @@ export function ItemSelectInput({ itemDetail, handleChange, itemForm }: ItemSele
   );
 }
 
-export function ItemSubmitButton({ itemComplete, setError, itemForm }: ButtonProps) {
+export function ItemSubmitButton({ itemComplete, setError, itemForm, userToken }: ButtonProps) {
+  console.log("form complete: ", itemComplete)
   return (
     <button type= "submit"
                       disabled={itemComplete}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        FetchWithToken(JSON.stringify(itemForm), "/items/new")
-                        .then(data => {
-                          console.log("register data: ", data);
-                          if (data.error) {
-                              setError(data.error);
-                              console.log("error: ", data.error)
-                          } else {
+                      onClick={() => {
+                        fetch(BACKEND_URL + "/items/new", {
+                          method: "POST",
+                          headers:  { 
+                                    "Content-Type": "application/json",
+                                    "Authorization": "Bearer " + userToken
+                                    },
+                          body: JSON.stringify(itemForm),
+                          })
+                          .then(response => response.json())
+                          .then(data => { 
+                            console.log("register data: ", data);
+                            if (data.error) { setError(data.error) }
+                            if (data.data) {
                               setError(null);
-                          }
-                      })
-                    }}      
+                            }
+                            console.log("DATA: ", data)
+                          })
+                          .catch((error) => alert("Error submitting item: " + error));
+                      }}      
               >
                 { itemComplete ? <span>Complete the form as requested</span> :<strong>SUBMIT</strong> }
               </button>
   )
+}
 
+export type DemoDataProps = { 
+  setItemForm: (item: Item) => void;
+  setWarnings: Dispatch<SetStateAction<string[]>>;
+  }
+
+export function DemoSelectItem( { setItemForm, setWarnings }: DemoDataProps) {
+  return (<>
+            <label style = {{ marginRight: "30px" }}
+            >
+              Select demo item number from 1 - 50": 
+            </label>
+            <input                 
+                  style={{ maxWidth: '100px' }}
+                  type= "number"
+                  name= "demo item"
+                  defaultValue={25}
+                  placeholder= "demo item"
+                  onChange= { (e) => {
+                    const index = Number(e.target.value);
+                    if (index >= 0 && index < DemoData.length) {
+                      const demoItem = DemoData[index];
+                      let userLocation: string | null;
+                      const userData = localStorage.getItem("userData");
+                      if (userData) {
+                        userLocation = JSON.parse(userData)["location"];
+                        const defaultPlant = LocationList.find( item =>
+                          item.description === userLocation
+                        );
+                        const defaultCenter = CostCenterList.find( item =>
+                          item.description === userLocation
+                        );
+                        demoItem.plant = defaultPlant?.choice ?? null
+                        demoItem.profitCenter = defaultCenter?.choice ?? null
+                      }
+                      setItemForm(demoItem);
+                      Object.keys(demoItem).forEach((key, keyindex) => {
+                        const newWarning = CheckItemLine(String(key), String(demoItem[key as keyof Item]));
+                        setWarnings((prevWarnings) => {
+                          const updatedWarnings = [...prevWarnings];
+                          updatedWarnings[keyindex - 1] = newWarning;
+                          return updatedWarnings;
+                        });
+                      });
+                  }}}
+            /> 
+          </>
+  )
 }

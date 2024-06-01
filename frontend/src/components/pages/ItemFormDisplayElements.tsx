@@ -136,7 +136,7 @@ export const ItemFormDetails: ItemFormDetail[] = [
 {element: "input", type: "text", maxlength: 40, options: null, name: "oldMaterialNumber", placeholder: {en: "Old Material Number", heb: "מקט ישן (חוגלית)"}},
 {element: "select", type: "text", maxlength: 80, options: MaterialGroupListEN, name: "materialGroup", placeholder: {en: "Material Group", heb: "קבוצת חומרים"}},
 {element: "input", type: "text", maxlength: 80, options: null, name: "netWeight", placeholder: {en: "Net Weight (Kg)", heb: "משקל נטו (קג)"}},
-{element: "input", type: "text", maxlength: 80, options: null, name: "orderUnit", placeholder: {en: "Order Unit", heb: "ORDER UNIT"}},
+{element: "select", type: "text", maxlength: 80, options: BaseUnitISOList, name: "orderUnit", placeholder: {en: "Order Unit", heb: "ORDER UNIT"}},
 {element: "input", type: "text", maxlength: 80, options: null, name: "purchasingGroup", placeholder: {en: "Purchasing Group", heb: "קבוצת רכש"}},
 {element: "input", type: "text", maxlength: 10, options: null, name: "manufacturerNumber", placeholder: {en: "Manufacturer Number", heb: "יצרן"}},
 {element: "input", type: "text", maxlength: 40, options: null, name: "manufacturerPartNumber", placeholder: {en: "Manufacturer Part Number", heb: "מס. יצרן"}},

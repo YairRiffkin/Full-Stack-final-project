@@ -5,7 +5,13 @@ export const LocationList: string[] = [
 ]
 
 export const RoleList: string[] = [
-    "--Choose--", "MRP Controller", "Warehouse Manager", "Engineer", "Mech. Maintenance", "Elec. Maintenance", "Other"
+    "--Choose--",
+    "MRP Controller",
+    "Warehouse Manager",
+    "Engineer",
+    "Mech. Maintenance",
+    "Elec. Maintenance",
+    "Other" 
 ]
 
 export const RegistrationFormDetails: FormDetail[] = [
