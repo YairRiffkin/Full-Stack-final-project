@@ -17,6 +17,7 @@ import { useEffect } from 'react';
 import { User } from './models/usertypes';
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { PendingUserRequest } from './pages/PendingUser';
+import { UpdateUserLevel } from './pages/UpdateUserStatus'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -48,6 +49,7 @@ export default function App() {
             <Route path="/PendingItem" element={<PendingItemRequest userToken={ userToken} />} />
             <Route path="/Procurement" element={<ProcData userToken={ userToken} />} />
             <Route path="/PendingUser" element={<PendingUserRequest userToken={ userToken} />} />
+            <Route path="/UserLevel" element={<UpdateUserLevel userToken={ userToken} />} />
             <Route path="/register" element={<NewUserRequest setUserDetails={setUserDetails} userDetails={userDetails}/>} />
             <Route path="/logout" element={<Logout />} />
           </Routes>

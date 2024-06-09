@@ -75,11 +75,8 @@ def db_log(identifier: str,         # what is the object logged identifier
     # Format it as YYYY-MM-DD HH:MM:SS
     db = get_db()
     cursor = db.cursor()
-    print("IN LOG", external)
     cursor.execute(query_string, (identifier, type, current, created, action, by, next, relative))
     if not external:
-        print("LOG COMMIT")
-        print("query: ", query_string, identifier, type, current, created, action, by, next, relative)
         db.commit()
         # db.close()
 
@@ -101,41 +98,44 @@ def db_set(table: str,
         query_string = query_string + f"{condition_key} = {condition_value};"
     db = get_db()
     cursor = db.cursor()
-    print("query string: ", query_string)
     cursor.execute(query_string)
     if log:
-        print("LOGGING")
         relative = None
         if condition_key == "id":
             relative = condition_value
-            print("relative: ", relative)
+        else:
+            if "'" in condition_value:
+                condition_value = condition_value.replace("'", "")
+            relative = db_fetchone(table, ["id"], [condition_key], [condition_value])
+            if relative:
+                relative = relative["id"]
         db_log(*log, relative=relative)
     db.commit()
     print("COMMIT")
     # db.close()
 
 
-def db_join(leading_table: str,
-            joined_table: str,
-            selected_main: list,
-            selected_join: list,
-            join: list,
-            columns: list,
-            numbered: str,
-            operators: list
-            ) -> None:
-    query_string = query_join(leading_table,
-                              joined_table,
-                              selected_main,
-                              selected_join,
-                              join,
-                              columns,
-                              numbered)
-    db = get_db()
-    cursor = db.cursor()
-    cursor.execute(query_string, operators)
-    result = cursor.fetchall()
-    return result
+# def db_join(leading_table: str,
+#             joined_table: str,
+#             selected_main: list,
+#             selected_join: list,
+#             join: list,
+#             columns: list,
+#             numbered: str,
+#             operators: list
+#             ) -> None:
+#     query_string = query_join(leading_table,
+#                               joined_table,
+#                               selected_main,
+#                               selected_join,
+#                               join,
+#                               columns,
+#                               numbered)
+#     db = get_db()
+#     cursor = db.cursor()
+#     cursor.execute(query_string, operators)
+#     result = cursor.fetchall()
+#     return result
 
 
 def db_maxSKU() -> int:

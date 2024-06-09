@@ -31,6 +31,12 @@ export function ActiveHeader() {
             </>
 }
 
+export function UpdateHeader() {
+    return  <>
+                <h2>User level has been changed</h2><br />
+            </>
+}
+
 export function HomeBodyDisplay({ userDetails }: { userDetails: User | null }) {
     return  <>
                 <p>{userDetails?.username}</p>

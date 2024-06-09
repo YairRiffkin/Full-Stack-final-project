@@ -16,6 +16,17 @@
   height: 80vh;
 }
 
+.item-box small {
+  width: 100%;
+  padding: 10px;
+  color: #d41212;
+  border: none;
+  border-radius: 4px;
+  text-align: justify;
+  border: 20px;
+  margin-left: 20px;
+}
+
 .item-box form {
   text-align: center;
 }

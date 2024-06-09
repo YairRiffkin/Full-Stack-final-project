@@ -53,12 +53,12 @@ def new_item() -> dict:
         # Prepare data for database
         new_item_db_data = new_item.make_db_data("pending")
         log_data = [
-                    new_item.manufacturerPartNumber,    # until approved this is the item identifier 
-                    "item",                             # type of object logged
-                    new_item.status,                    # request status - default "pending"
-                    "register",                         # action to be logged
-                    user_data["employee_id"],           # user performing the action
-                    "admin"]                            # next in line for this action
+            new_item.manufacturerPartNumber,    # until approved this is the item identifier 
+            "item",                             # type of object logged
+            new_item.status,                    # request status - default "pending"
+            "register",                         # action to be logged
+            user_data["employee_id"],           # user performing the action
+            "admin"]                            # next in line for this action
         db_insert("itemsbasic",             # table
                   new_item_db_data[0],      # list of columns
                   [new_item_db_data[1]],    # list of data
@@ -103,6 +103,8 @@ def get_pending_data() -> dict:
         annotations = list(Item.__annotations__.keys())
         annotations.remove("id")
         key_map = dict(zip(Item.database_columns, annotations))
+        for i in key_map:
+            print(i, key_map[i])
         index = 1
         return_data = {}
         return_item = {}

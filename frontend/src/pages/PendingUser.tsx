@@ -15,8 +15,8 @@ export function PendingUserRequest({ userToken }: { userToken: string | null }) 
     const [userDetails, setUserDetails] = useState<UserContainerType | null>({});
     const [display, setDisplay] = useState<Item | User | null>(null)
     const [approvalStatus, setApprovalStatus] = useState(false);
-    const [ userLevel, setUserLevel] = useState<string>("Guest")
-    let scrollItem = 1
+    const [ userLevel, setUserLevel] = useState<string>("Guest");
+    let scrollItem = 1;
 
     useEffect(() => {
       fetch(BACKEND_URL + "/users/pending", {

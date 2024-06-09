@@ -111,11 +111,12 @@ export function ItemSelectInput({ itemDetail, handleChange, itemForm, userLevel 
 }
 
 export function ItemSubmitButton({ itemComplete, setError, itemForm, userToken }: ButtonProps) {
-  console.log("form complete: ", itemComplete)
+  console.log("form complete: ", itemComplete, itemForm)
   return (
     <button type= "submit"
                       disabled={itemComplete}
-                      onClick={() => {
+                      onClick={(event) => {
+                        event.preventDefault();
                         fetch(BACKEND_URL + "/items/new", {
                           method: "POST",
                           headers:  { 

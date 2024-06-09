@@ -50,7 +50,6 @@ def get_me() -> dict:
     data = request.get_json()
     user_id = token_data["sub"]
     user = db_fetchone("users", ["employee_id", "email"], ["id"], [user_id])
-    print("password1: ", data["password1"])
     if data["password1"]:
         update = ok_to_update_password(user_id)
         print("UPDATE: ", update)
@@ -174,3 +173,79 @@ def check_password_input() -> dict:
         return {"data": "all good"}
     else:
         return {"error": "Password does not match"}
+
+
+@bp.route("/users/getdata", methods=["GET", "POST"])
+@jwt_required()
+def get_employee_data() -> dict:
+    print("in get data")
+    error = {}
+    token_data = get_jwt()
+    data = request.get_json()
+    user_id = token_data["sub"]
+    user_data = db_fetchone("users", ["user_level"], ["id"], [user_id])
+    print("user id: ", user_id, user_data["user_level"], data["employeeID"])
+    if user_data["user_level"] == "admin":
+        print("is admin", data["employeeID"].upper())
+        employee_data = db_fetchone(
+            "users",
+            ["username", "employee_id", "role", "location", "user_level"],
+            ["employee_id"],
+            [data["employeeID"].upper()]
+            )
+        print("employee data: ", employee_data)
+        if employee_data:
+            user = dict(employee_data)
+            print("employee data: ", employee_data)
+            annotations = list(User.__annotations__.keys())
+            annotations.remove("id")
+            key_map = dict(zip(User.database_columns, annotations))
+            employee = {key_map.get(k, k): v for k, v in user.items()}
+            print("employee: ", employee)
+        else:
+            error["Data"] = "User does not exist"
+    else:
+        error["Authorization"] = "You are not authorized for this action"
+    if error:
+        print("error: ", error)
+        return {"error": error}
+    else:
+        print("data: ", employee)
+        return {"data": employee}
+
+
+@bp.route("/users/changelevel", methods=["GET", "POST"])
+@jwt_required()
+def update_level() -> dict:
+    print("in update level")
+    error = {}
+    token_data = get_jwt()
+    data = request.get_json()
+    user_id = token_data["sub"]
+    user_data = db_fetchone("users", ["user_level", "employee_id"], ["id"], [user_id])
+    print("user id: ", user_id, user_data["user_level"], data["ID"])
+    if user_data["user_level"] == "admin":
+        log_data = [
+            data["ID"].upper(),         # user identifier
+            "user",                     # type of object logged
+            "active",                   # status
+            "change level",             # action to be logged
+            user_data["employee_id"],   # user performing the action
+            ""                          # next in line for this action
+            ]
+        db_set(
+            "users",
+            ["user_level"],
+            [data["User_level"]],
+            f"'{data['ID'].upper()}'",
+            "employee_id",
+            log_data
+        )
+    else:
+        error["Authorization"] = "You are not authorized for this action"
+    if error:
+        print("error: ", error)
+        return {"error": error}
+    else:
+        print("successful")
+        return {"data": "all good"}

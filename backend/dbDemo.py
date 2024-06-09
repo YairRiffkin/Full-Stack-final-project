@@ -159,15 +159,16 @@ log_string = """INSERT INTO history
             (identifier, type, current, created, action, by, next, relative)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?);"""
 
+
 conn = sqlite3.connect('database/data.db')
 cursor = conn.cursor()
 cursor.execute("DELETE FROM itemsbasic")
 cursor.execute("DELETE FROM users")
 cursor.execute("DELETE FROM history")
+cursor.execute("DELETE FROM comments")
 
 for user, level in zip(demo_users, demo_levels):
     new_user = User(*(user.get(attr) if user.get(attr) else None for attr in User.__annotations__))
-    print("NEW USER: ", new_user)
     new_user.beautify_user_data()
     new_user_db_data = new_user.make_db_data(level, {"password": "Aa1234"})
     query_string = query_insert("users", new_user_db_data[0])

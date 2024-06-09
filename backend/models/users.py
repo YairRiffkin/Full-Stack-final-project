@@ -11,8 +11,8 @@ class User:
     username: str | None
     employee_id: str | None
     email: str | None
-    location: str | None
     phone_number: str | None
+    location: str | None
     role: str | None | None
     user_level: str | None
 

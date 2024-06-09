@@ -15,7 +15,6 @@ export function CheckItemLine(name: string, value: string) {
     if (value === "--Choose--") { warning = "You must choose an option" }
     if (value !== trimmedValue) { warning = "No spaces allowed at beginning or end of line" }
     if (name === "shortEnglishDescription" || name === "longEnglishDescription") {
-      console.log("in english check")
       const isEnglishString = [...value].every(char => char >= '\u0000' && char <= '\u007F');
       if (!isEnglishString) { warning = "Description MUST be in english" }
     }
@@ -73,7 +72,6 @@ export function ItemWarningDisplay(warning: string | null) {
 }
 
 export function ItemIssues(error: string[]) {
-  /*Displaying backend errors on top of form before submission */
   return  <small>Please address the below issues before submitting: 
             <ol>
               { error.map((item, index) => (
@@ -84,26 +82,18 @@ export function ItemIssues(error: string[]) {
 }
 
 export function DefaultDisplay(name: string, value: string) {
-  console.log("name: ", name, "value: ", value);
   const correction: { [key: string]: string | null | undefined } = {};
 
   if (name.trim() === "plant") {
     const defaultValue = LocationList.find(item => item.choice === value.trim());
-    console.log("default value: ", defaultValue);
     const newChoice = CostCenterList.find(item => item.description === defaultValue?.description);
-    console.log("new choice: ", newChoice)
     correction.profitCenter = newChoice?.choice ?? null;
-    console.log("correction: ", correction);
   }
   if (name.trim() === "materialType") {
     const defaultValue = MaterialTypeList.find(item => item.choice === value.trim());
-    console.log("default value: ", defaultValue);
     const newChoice = StorageLocList.find(item => item.description === defaultValue?.description);
-    console.log("new choice: ", newChoice)
     correction.storageLocation = newChoice?.choice ?? null;
-    console.log("correction: ", correction);
   }
-
   return correction;
 }
 
