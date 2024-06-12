@@ -109,7 +109,7 @@ export function NewUserRequest({ setUserDetails }: UserDataProps) {
                               console.log("register data: ", data);
                               if (data.error) { setError(data.error) }
                               if (data.userData) { 
-                                setUserDetails(data.userData);
+                                setUserDetails(data.userData);np
                                 setError(null);
                                 navigate('/');
                               }

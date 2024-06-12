@@ -70,5 +70,4 @@ def query_set_if_exists(table: str, columns: list, values: list) -> str:
         result = result + add_comma + f"{column} = excluded.{column}"
         add_comma = ", "
     result = result + ";"
-    print("QUERY SET IF: ", result)
     return result

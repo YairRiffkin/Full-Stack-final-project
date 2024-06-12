@@ -6,6 +6,7 @@ from database.db import close_db, init_db
 from views.auth import auth
 from views.users import users
 from views.items import items
+from views.items import FinalProcessing
 from views.procurement import procurement
 
 app = Flask(__name__)
@@ -19,21 +20,7 @@ app.register_blueprint(auth.bp)
 app.register_blueprint(users.bp)
 app.register_blueprint(items.bp)
 app.register_blueprint(procurement.bp)
-
-
-# @app.errorhandler(Exception)
-# def handle_exception(e):
-#     logging.exception("An error occurred:")
-#     return jsonify(error="An error occurred"), 500
-
-
-# @app.teardown_appcontext
-# def close_database_connection(exception=None):
-#     db = g.pop("db", None)
-#     if db is not None:
-#         db.close()
-#     if exception is not None:
-#         logging.error("Database error occurred:", exc_info=exception)
+app.register_blueprint(FinalProcessing.bp)
 
 
 print("starting the app")

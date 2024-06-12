@@ -37,7 +37,7 @@ def db_fetchall(table: str,
     # db.close()
     return result
 
-# TODO: check how to log multiple data
+
 def db_insert(table: str,
               columns: list,
               data_items: list,
@@ -111,8 +111,6 @@ def db_set(table: str,
                 relative = relative["id"]
         db_log(*log, relative=relative)
     db.commit()
-    print("COMMIT")
-    # db.close()
 
 
 # def db_join(leading_table: str,

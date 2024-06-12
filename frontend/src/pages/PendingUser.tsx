@@ -15,7 +15,7 @@ export function PendingUserRequest({ userToken }: { userToken: string | null }) 
     const [userDetails, setUserDetails] = useState<UserContainerType | null>({});
     const [display, setDisplay] = useState<Item | User | null>(null)
     const [approvalStatus, setApprovalStatus] = useState(false);
-    const [ userLevel, setUserLevel] = useState<string>("Guest");
+    const [userLevel, setUserLevel] = useState<string>("Guest");
     let scrollItem = 1;
 
     useEffect(() => {
@@ -71,6 +71,8 @@ export function PendingUserRequest({ userToken }: { userToken: string | null }) 
     };
 
     const handleApprove = () => {
+      const pendingDataLength = pendingData ? Object.keys(pendingData).length : 0;
+      if (pendingDataLength > 0) {
       fetch(BACKEND_URL + "/users/approve", {
         method: "POST",
         headers: { 
@@ -96,7 +98,9 @@ export function PendingUserRequest({ userToken }: { userToken: string | null }) 
           .catch(error => {
             console.error("Error:", error);
           });
+        }
         };
+      
 
       
     return (

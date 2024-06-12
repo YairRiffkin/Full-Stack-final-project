@@ -94,9 +94,15 @@ export function ProcData({ userToken }: { userToken: string | null }) {
       .then(data => {
         if (data && data.data) {
           setApprovalStatus(true);
-          setComment("")
+          setComment("");
           console.log("data: ", data.data);
-    }})
+          // activating final processing
+          fetch(BACKEND_URL + "/final/update", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+    })
           .catch(error => {
             console.error("Error:", error);
           });

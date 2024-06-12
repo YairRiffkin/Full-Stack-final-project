@@ -103,8 +103,6 @@ def get_pending_data() -> dict:
         annotations = list(Item.__annotations__.keys())
         annotations.remove("id")
         key_map = dict(zip(Item.database_columns, annotations))
-        for i in key_map:
-            print(i, key_map[i])
         index = 1
         return_data = {}
         return_item = {}

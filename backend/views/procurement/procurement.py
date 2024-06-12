@@ -14,7 +14,6 @@ def get_pending_data() -> dict:
     token_data = get_jwt()
     user_id = token_data["sub"]
     data = request.get_json()
-    print("COMMENT: ", data["Item_ID"], data["comment"])
     user_data = db_fetchone("users", ["user_level"], ["id"], [user_id])
     if user_data["user_level"] != "proc":
         return {"error": "You are not authorized for this action"}

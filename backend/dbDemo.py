@@ -166,6 +166,13 @@ cursor.execute("DELETE FROM itemsbasic")
 cursor.execute("DELETE FROM users")
 cursor.execute("DELETE FROM history")
 cursor.execute("DELETE FROM comments")
+cursor.execute("DELETE FROM final_accounting_data")
+cursor.execute("DELETE FROM final_basic")
+cursor.execute("DELETE FROM final_expansion_LTMC")
+cursor.execute("DELETE FROM final_long_text")
+cursor.execute("DELETE FROM final_material_description")
+cursor.execute("DELETE FROM final_plant_data")
+cursor.execute("DELETE FROM final_storage_data")
 
 for user, level in zip(demo_users, demo_levels):
     new_user = User(*(user.get(attr) if user.get(attr) else None for attr in User.__annotations__))
