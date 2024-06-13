@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import '../components/static/pendingstyle.css'
 import { DetailsDisplay, ItemDisplayTable, TopDisplay} from "../components/pages/PendingItemHtmlElements";
 import { MyResponseContainerType } from "../models/Responsetypes";
-import { useLocalStorage } from "@uidotdev/usehooks";
 import { Item, ItemContainerType } from "../models/itemtypes";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
@@ -11,14 +10,16 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 export function PendingItemRequest({ userToken }: { userToken: string | null }) {
     const [selectLoc, setSelectLoc] = useState("");
     const [pendingData, setPendingData] = useState<MyResponseContainerType | null>({});
-    const [indexed, setIndexed] = useLocalStorage<number>("ItemIndex", 1);
+    const [indexed, setIndexed] = useState<number>(1);
     const [itemDetails, setItemDetails] = useState<ItemContainerType | null>({});
-    const [maxItemNumber, setMaxItemNumber] = useState<number | null>(0);
+    const [maxItemNumber, setMaxItemNumber] = useState<number>(84500000);
     const [display, setDisplay] = useState<Item | null>(null);
     const [approvalStatus, setApprovalStatus] = useState(false);
     const [comment, setComment] = useState("");
     const [isTyping, setIsTyping] = useState<boolean>(false);
     let scrollItem = 1;
+
+    console.log("MAX: ", maxItemNumber)
 
     useEffect(() => {
       fetch(BACKEND_URL + "/items/pending", {
@@ -45,12 +46,14 @@ export function PendingItemRequest({ userToken }: { userToken: string | null }) 
           setComment("")
           setPendingData(data.data);
           setItemDetails(data.item)
-          setMaxItemNumber(parseInt(data.maxSKU))
           if (data.item && data.item[indexed]) {
             setDisplay(data.item[indexed]);
+          } else {
+            setDisplay(null);
           }
           if (data.maxSKU) {
-            setMaxItemNumber(parseInt(data.maxSKU));
+            console.log(parseInt(data.maxSKU), maxItemNumber)
+            setMaxItemNumber(Math.max(parseInt(data.maxSKU), maxItemNumber));
           }
         } 
       })
@@ -64,14 +67,16 @@ export function PendingItemRequest({ userToken }: { userToken: string | null }) 
       }, [userToken, selectLoc, approvalStatus, isTyping]);
 
     const handleScroll = () => {
+      console.log(maxItemNumber)
       setIndexed((prevIndexed) => {
         const pendingDataLength = pendingData ? Object.keys(pendingData).length : 0;
-        if (itemDetails && (prevIndexed < pendingDataLength || prevIndexed > 1)) {
+        if (itemDetails && (prevIndexed < pendingDataLength || prevIndexed > 0)) {
           const nextItem = itemDetails[prevIndexed + scrollItem];
           if (nextItem) {
             setDisplay(nextItem);
             return prevIndexed + scrollItem;
           } else {
+            setDisplay(itemDetails[prevIndexed]);
             console.warn('Next item is undefined or null');
             return prevIndexed;
           }
@@ -103,6 +108,8 @@ export function PendingItemRequest({ userToken }: { userToken: string | null }) 
         if (data && data.data) {
           setMaxItemNumber(prevMaxItemNumber => (typeof prevMaxItemNumber === 'number' ? prevMaxItemNumber + 1 : 1));
           setApprovalStatus(true);
+          const pendingDataLength = pendingData ? Object.keys(pendingData).length : 0;
+          setIndexed(indexed >= pendingDataLength ? pendingDataLength - 1 : indexed);
           setComment("")
           console.log("data: ", data.data);
           console.log("max SKU:", maxItemNumber)

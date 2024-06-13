@@ -6,13 +6,13 @@ import { CostCenterList, ItemFormDetails } from "./ItemFormDisplayElements";
 
 export type TopDisplayProps = {
                               setSelectLoc: Dispatch<SetStateAction<string>>,
-                              setMaxItemNumber: Dispatch<SetStateAction<number | null>>,
-                              maxItemNumber: number | null
+                              setMaxItemNumber: Dispatch<SetStateAction<number>>,
+                              maxItemNumber: number,
                             }
 
 export type DetailsProps = { 
                             pendingData: MyResponseContainerType | null, 
-                            indexed: number 
+                            indexed: number,
                           }
 
 export type DisplayTableProps = { 
@@ -51,10 +51,9 @@ export function DetailsDisplay({pendingData, indexed}: DetailsProps ) {
       <table>
           <tbody>
               <tr>
-                  <td>Index: {indexed} of {pendingData ? Object.keys(pendingData).length : 0}</td>
-                  <td>Created on: {pendingData[indexed]?.created}</td>
+                  <td>Index: {indexed} of {pendingData ? Object.keys(pendingData).length : 0}&nbsp;{"==>"}&nbsp;</td>
+                  <td>Created on: {pendingData[indexed]?.created}&nbsp;{"==>"}&nbsp;</td>
                   <td>By: {pendingData[indexed]?.username}</td>
-                  <td>Id: {pendingData[indexed]?.relative}</td>
               </tr>
           </tbody>
       </table>

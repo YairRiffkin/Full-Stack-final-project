@@ -1,8 +1,6 @@
-import { Dispatch, SetStateAction } from "react";
 import { MyResponseContainerType } from "../../models/Responsetypes"
-import { ItemFormDetail, ProcurementFormDetail } from "../../models/formtypes";
+import { ProcurementFormDetail } from "../../models/formtypes";
 import { Item } from "../../models/itemtypes";
-import { CostCenterList, ItemFormDetails } from "./ItemFormDisplayElements";
 import { ProcurementFormDetails } from "./ProcurementDisplayElements";
 
 
@@ -21,10 +19,9 @@ export function ProcDetailsDisplay({pendingData, indexed}: DetailsProps ) {
       <table>
           <tbody>
               <tr>
-                  <td>Index: {indexed} of {pendingData ? Object.keys(pendingData).length : 0}</td>
-                  <td>Approved on: {pendingData[indexed]?.created}</td>
+                  <td>Index: {indexed} of {pendingData ? Object.keys(pendingData).length : 0}&nbsp;{"==>"}&nbsp;</td>
+                  <td>Approved on: {pendingData[indexed]?.created}&nbsp;{"==>"}&nbsp;</td>
                   <td>By: {pendingData[indexed]?.username}</td>
-                  <td>item Id: {pendingData[indexed]?.relative}</td>
               </tr>
           </tbody>
       </table>

@@ -30,10 +30,9 @@ export function UsersDisplay({pendingData, indexed}: DetailsProps ) {
       <table>
           <tbody>
               <tr>
-                  <td>Index: {indexed} of {pendingData ? Object.keys(pendingData).length : 0}</td>
-                  <td>Created on: {pendingData[indexed]?.created}</td>
+                  <td>Index: {indexed} of {pendingData ? Object.keys(pendingData).length : 0}&nbsp;{"==>"}&nbsp;</td>
+                  <td>Created on: {pendingData[indexed]?.created}&nbsp;{"==>"}&nbsp;</td>
                   <td>By: {pendingData[indexed]?.username}</td>
-                  <td>Id: {pendingData[indexed]?.relative}</td>
               </tr>
           </tbody>
       </table>

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import '../components/static/pendingstyle.css'
 import { MyResponseContainerType } from "../models/Responsetypes";
-import { useLocalStorage } from "@uidotdev/usehooks";
 import { User, UserContainerType } from "../models/usertypes";
 import { Item } from "../models/itemtypes";
 import { UserDisplayTable, UsersDisplay } from "../components/pages/PendingUserHtmlElements";
@@ -11,7 +10,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 export function PendingUserRequest({ userToken }: { userToken: string | null }) {
     const [pendingData, setPendingData] = useState<MyResponseContainerType | null>({});
-    const [indexed, setIndexed] = useLocalStorage<number>("UserIndex", 1);
+    const [indexed, setIndexed] = useState<number>(1);
     const [userDetails, setUserDetails] = useState<UserContainerType | null>({});
     const [display, setDisplay] = useState<Item | User | null>(null)
     const [approvalStatus, setApprovalStatus] = useState(false);
@@ -39,7 +38,8 @@ export function PendingUserRequest({ userToken }: { userToken: string | null }) 
           setUserDetails(data.user)
           if (data.user && data.user[indexed]) {
             setDisplay(data.user[indexed]);
-            console.log("DISPLAY: ", data.user[indexed])
+          } else {
+            setDisplay(null);
           }
         } 
       })
@@ -55,12 +55,13 @@ export function PendingUserRequest({ userToken }: { userToken: string | null }) 
     const handleScroll = () => {
       setIndexed((prevIndexed) => {
         const pendingDataLength = pendingData ? Object.keys(pendingData).length : 0;
-        if (userDetails && (prevIndexed < pendingDataLength || prevIndexed > 1)) {
+        if (userDetails && (prevIndexed < pendingDataLength || prevIndexed > 0)) {
           const nextItem = userDetails[prevIndexed + scrollItem];
           if (nextItem) {
             setDisplay(nextItem);
             return prevIndexed + scrollItem;
           } else {
+            setDisplay(userDetails[prevIndexed]);
             console.warn('Next item is undefined or null');
             return prevIndexed;
           }
@@ -93,7 +94,9 @@ export function PendingUserRequest({ userToken }: { userToken: string | null }) 
       .then(data => {
         if (data && data.data) {
           setApprovalStatus(true);
-          console.log("data: ", data.data);
+          const pendingDataLength = pendingData ? Object.keys(pendingData).length : 0;
+          setIndexed(indexed >= pendingDataLength ? pendingDataLength - 1 : indexed);
+          console.log("length: ", pendingDataLength, "indexed: ", indexed);
     }})
           .catch(error => {
             console.error("Error:", error);
@@ -136,6 +139,7 @@ export function PendingUserRequest({ userToken }: { userToken: string | null }) 
           <div className="scroll-box">
               <UserDisplayTable display={display} />
           </div>
+          { display && (
           <div className="bottom-text">
           <label htmlFor="selectLevel">User Level when approved:</label>
             <select 
@@ -147,7 +151,7 @@ export function PendingUserRequest({ userToken }: { userToken: string | null }) 
               <option>Proc</option>
               <option>Admin</option>                  
             </select>
-          </div>
+          </div> )}
       </div>
   );
 }

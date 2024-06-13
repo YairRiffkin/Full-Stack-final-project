@@ -10,7 +10,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 export function ProcData({ userToken }: { userToken: string | null }) {
     const [pendingData, setPendingData] = useState<MyResponseContainerType | null>({});
-    const [indexed, setIndexed] = useLocalStorage<number>("ProcIndex", 1);
+    const [indexed, setIndexed] = useState<number>(1);
     const [itemDetails, setItemDetails] = useState<ItemContainerType | null>({});
     const [display, setDisplay] = useState<Item | null>(null);
     const [approvalStatus, setApprovalStatus] = useState(false);
@@ -44,6 +44,8 @@ export function ProcData({ userToken }: { userToken: string | null }) {
           setItemDetails(data.item);
           if (data.item && data.item[indexed]) {
             setDisplay(data.item[indexed]);
+          } else {
+            setDisplay(null);
           }
         }
       })
@@ -59,12 +61,13 @@ export function ProcData({ userToken }: { userToken: string | null }) {
     const handleScroll = () => {
       setIndexed((prevIndexed) => {
         const pendingDataLength = pendingData ? Object.keys(pendingData).length : 0;
-        if (itemDetails && (prevIndexed < pendingDataLength || prevIndexed > 1)) {
+        if (itemDetails && (prevIndexed < pendingDataLength || prevIndexed > 0)) {
           const nextItem = itemDetails[prevIndexed + scrollItem];
           if (nextItem) {
             setDisplay(nextItem);
             return prevIndexed + scrollItem;
           } else {
+            setDisplay(itemDetails[prevIndexed]);
             console.warn('Next item is undefined or null');
             return prevIndexed;
           }
@@ -94,6 +97,8 @@ export function ProcData({ userToken }: { userToken: string | null }) {
       .then(data => {
         if (data && data.data) {
           setApprovalStatus(true);
+          const pendingDataLength = pendingData ? Object.keys(pendingData).length : 0;
+          setIndexed(indexed >= pendingDataLength ? pendingDataLength - 1 : indexed);
           setComment("");
           console.log("data: ", data.data);
           // activating final processing
