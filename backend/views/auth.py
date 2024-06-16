@@ -28,11 +28,13 @@ def login() -> dict:
         username = data["username"].upper()
     oper_list = [username, data["password"]]
     user = db_fetchone("users", ["id", "employee_id"], [search_column, "password"], oper_list)
-    logged_user = str(user["employee_id"])
+    
     # If details are wrong return query is empty
     if user is None:
+        
         return {"error": "Invalid username or password"}, 503
     else:
+        logged_user = str(user["employee_id"])
         expires_delta = timedelta(hours=8)
         access_token = create_access_token(identity=user["id"], expires_delta=expires_delta)
         # logging action

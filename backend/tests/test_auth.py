@@ -17,13 +17,6 @@ user1 = {
     "role": "MRP Controller",
     "password": "Aa1234"}
 
-user = User(*(user1.get(attr) if user1.get(attr) else None for attr in User.__annotations__))
-user_db_data = user.make_db_data("active", {"password": "Aa1234"})
-db_insert(
-        "users",
-        user_db_data[0],
-        [user_db_data[1]]
-        )
 
 
 def generate_password():
@@ -38,6 +31,14 @@ def db():
     with app.app_context():
         db = get_db()
         db.execute("DELETE FROM users WHERE username LIKE 'test_%'")
+        user = User(*(user1.get(attr) if user1.get(attr) else None for attr in User.__annotations__))
+        user_db_data = user.make_db_data("active", {"password": "Aa1234"})
+        db_insert(
+        "users",
+        user_db_data[0],
+        [user_db_data[1]]
+        )
+
         yield db
         db.execute("DELETE FROM users WHERE username LIKE 'test_%'")
 

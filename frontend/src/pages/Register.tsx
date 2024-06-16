@@ -73,10 +73,15 @@ export function NewUserRequest({ setUserDetails }: UserDataProps) {
                         )} 
                         {formDetail.element === "select" && (
                           <div style = {{ display: "flex ", alignItems: "top" }}>
-                            <label style = {{ marginRight: "10px" }}>
+                            <label 
+                              htmlFor={ formDetail.name }
+                              style = {{ marginRight: "10px" }}>
                               {formDetail.placeholder}: 
                             </label>
-                              <select name= { formDetail.name } onChange= { (e) => handleChange(e) }> 
+                              <select
+                                id= { formDetail.name } 
+                                name= { formDetail.name } 
+                                onChange= { (e) => handleChange(e) }> 
                                 {formDetail.options?.map((option) => (
                                   <option key= { option } value={ option }>
                                     {option}

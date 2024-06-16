@@ -23,39 +23,40 @@ describe('NewUserRequest', () => {
             </MemoryRouter>
         )
 
-        const formElements: Record<string, HTMLElement | undefined> = {};
-
-        RegistrationFormDetails.forEach(detail => {
-            // console.log("detail: " , detail.element)
-            const elements = screen.getAllByRole(detail.element === 'input' ? 'textbox' : 'combobox', { name: "" });
-            
-            const element = elements.find(el => el.getAttribute('name') === detail.name);
-            // console.log("element: ", element.name)
-            if (element) {
-                formElements[detail.name] = element;
-                
-            }
-        });
-
+        const usernameInput = screen.getByPlaceholderText('First name, Surname')
+        const employeeIDInput = screen.getByPlaceholderText('Employee ID')
+        const emailInput = screen.getByPlaceholderText('Email')
+        const phoneInput = screen.getByPlaceholderText('Phone Number')
+        const locationInput = screen.getByLabelText(/Location:/i)
+        const roleInput = screen.getByLabelText(/Role/i)
+        const password1Input = screen.getByPlaceholderText('Password')
+        const password2Input = screen.getByPlaceholderText('Verify Password')
         const submitButton = screen.getByRole('button', { name: /Complete the form as requested/i });
-        return { ...formElements, submitButton };
+        return { usernameInput, employeeIDInput, emailInput, phoneInput, locationInput, roleInput, password1Input, password2Input, submitButton };
     };
 
-    const renderAndFillForm = async (formData: Record<string, string>) => {
-        const { submitButton, ...elements } = renderForm();
+    const renderAndFillForm = async (username, employeeID, email, phone, location, role, password1, password2) => {
+        const {usernameInput, employeeIDInput, emailInput, phoneInput, locationInput, roleInput, password1Input, password2Input, submitButton} = renderForm();
         const user = userEvent.setup();
-
-        for (const key in elements) {
-            if (elements[key]) {
-                if (elements[key].element === 'input') {
-                    await user.type(elements[key], formData[key]);
-                } else if (elements[key].element === 'select') {
-                    await user.selectOptions(elements[key], formData[key]);
-                }
-            }
-        }
-
-        return { ...elements, submitButton, user };
+        await user.click(usernameInput)
+        await user.keyboard(username)
+        await user.click(employeeIDInput)
+        await user.keyboard(employeeID)
+        await user.click(emailInput)
+        await user.keyboard(email)
+        await user.click(phoneInput)
+        await user.keyboard(phone)
+        // await user.click(locationInput)
+        await user.selectOptions(locationInput, location)
+        // await user.keyboard(location)
+        await user.selectOptions(roleInput, role)
+        // await user.click(roleInput)
+        // await user.keyboard(role)
+        await user.click(password1Input)
+        await user.keyboard(password1)
+        await user.click(password2Input)
+        await user.keyboard(password2)
+        return { usernameInput, employeeIDInput, emailInput, phoneInput, locationInput, roleInput, password1Input, password2Input, submitButton, user };
     };
 
     it("Renders the register form with disabled submit", () => {
@@ -66,6 +67,9 @@ describe('NewUserRequest', () => {
 
     it("Enables submit when form is valid", async () => {
         const { submitButton } = await renderAndFillForm("Yair Cohen", "E12345", "admin@xxx.com", "0526088092", "Afula", "Other", "Aa1234", "Aa1234");
+        const errors = document.querySelectorAll("small");
+        console.log(errors);
+        expect(errors.length).toEqual(0);
         expect(submitButton).toBeEnabled();
     });
 });
