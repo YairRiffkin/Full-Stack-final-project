@@ -1,3 +1,5 @@
+// Display HTML elements for pending items page
+
 import { Dispatch, SetStateAction } from "react";
 import { MyResponseContainerType } from "../../models/Responsetypes"
 import { ItemFormDetail } from "../../models/formtypes";

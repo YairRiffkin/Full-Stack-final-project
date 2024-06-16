@@ -1,4 +1,4 @@
-
+# a full layout of item details standard requirements
 null = None
 
 

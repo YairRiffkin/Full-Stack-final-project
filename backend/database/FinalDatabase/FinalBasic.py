@@ -1,5 +1,7 @@
+# handle the final data configuration
 
 basic_table_elements = {
+    # list of standard requirements
     "Material Number": {"Field Description": "Material Number", "Group Name": "Key", "Importance": "mandatory for sheet", "Type": "Text", "Length": 80    , "Decimal": 0, "default": "0", "reference": "SKU"},
     "Language Key": {"Field Description": "Language Key", "Group Name": "Mandatory", "Importance": "mandatory for sheet", "Type": "Text", "Length": 80    , "Decimal": 0, "default": "HE", "reference": "0"},
     "Material description": {"Field Description": "Material description", "Group Name": "Mandatory", "Importance": "mandatory for sheet", "Type": "Text", "Length": 40    , "Decimal": 0, "default": "0", "reference": "short_hebrew"},
@@ -10,8 +12,8 @@ basic_table_elements = {
     "Base Unit of Measure": {"Field Description": "Base Unit of Measure (ISO format)", "Group Name": "Basic 1 - General Data", "Importance": "mandatory for sheet", "Type": "Text", "Length": 80    , "Decimal": 0, "default": "0", "reference": "unit_of_measure"},
     "Old material number": {"Field Description": "Old material number", "Group Name": "Basic 1 - General Data", "Importance": "", "Type": "Text", "Length": 40    , "Decimal": 0, "default": "0", "reference": "old_number"},
     "Division": {"Field Description": "Division", "Group Name": "Basic 1 - General Data", "Importance": "", "Type": "Text", "Length": 80    , "Decimal": 0, "default": "01", "reference": "0"},
-    "Gross Weight": {"Field Description": "Gross Weight", "Group Name": "Basic 1 - Dimensions/EANs", "Importance": "", "Type": "Number", "Length": 13    , "Decimal": 3     , "default": "0", "reference": "0"},
-    "Net Weight": {"Field Description": "Net Weight", "Group Name": "Basic 1 - Dimensions/EANs", "Importance": "", "Type": "Number", "Length": 13    , "Decimal": 3     , "default": "0.001", "reference": "net_weight"},
+    "Gross Weight": {"Field Description": "Gross Weight", "Group Name": "Basic 1 - Dimensions/EANs", "Importance": "", "Type": "Number", "Length": 13    , "Decimal": 3, "default": "0", "reference": "0"},
+    "Net Weight": {"Field Description": "Net Weight", "Group Name": "Basic 1 - Dimensions/EANs", "Importance": "", "Type": "Number", "Length": 13    , "Decimal": 3, "default": "0.001", "reference": "net_weight"},
     "Unit of Weight": {"Field Description": "Unit of Weight", "Group Name": "Basic 1 - Dimensions/EANs", "Importance": "", "Type": "Text", "Length": 80    , "Decimal": 0, "default": "KG", "reference": "0"},
     "Volume": {"Field Description": "Volume", "Group Name": "Basic 1 - Dimensions/EANs", "Importance": "", "Type": "Number", "Length": 13    , "Decimal": 3     , "default": "0", "reference": "0"},
     "Length": {"Field Description": "Length", "Group Name": "Basic 1 - Dimensions/EANs", "Importance": "", "Type": "Number", "Length": 13    , "Decimal": 3     , "default": "0", "reference": "0"},
@@ -26,7 +28,8 @@ basic_table_elements = {
     }
 
 
-def final_basic_schema():
+def final_basic_schema() -> str:
+    # Schema string for creating DB
     schema_string_basic = "CREATE TABLE IF NOT EXISTS final_basic ("
     id_line = "id INTEGER PRIMARY KEY NOT NULL"
     schema_string_basic = schema_string_basic + id_line

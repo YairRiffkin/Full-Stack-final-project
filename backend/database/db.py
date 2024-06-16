@@ -1,3 +1,5 @@
+# all database functions
+
 import sqlite3
 from pathlib import Path
 

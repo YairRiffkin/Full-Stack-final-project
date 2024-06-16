@@ -1,3 +1,5 @@
+// Update user page validation - mostly uses the register functions
+
 import { NewUser } from "../../models/usertypes";
 import { UserNameValid, EmployeeIdValid, EmailValid, SelectValid, PasswordValid, PasswordVerify } from "./RegistrationValidateFunctions";
 
@@ -22,6 +24,7 @@ export function CheckUserUpdateInputLine(name: string, value: string, value1: st
 }
 
 export function CheckUpdateUserComplete(form: NewUser, warnings: string[], passwordUpdate: boolean) {
+  /* checks the specific form is complete */
   let result: boolean = false;
   warnings.map((warning) => {
     if (warning !== "") { result = true; }

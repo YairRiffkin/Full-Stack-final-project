@@ -17,7 +17,6 @@ export function ItemListDetails() {
         }
       }))
     ];
-    console.log("item list form: ", itemListDetails)
   
     return itemListDetails;
   }

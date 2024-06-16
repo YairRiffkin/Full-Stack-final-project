@@ -1,5 +1,7 @@
+# handle the final data configuration
 
 long_text_elements = {
+    # list of standard requirements
     "Material Number": {"Field Description": "Material Number", "Group Name": "Key", "Importance": "mandatory for sheet", "Type": "Text", "Length": 80    , "Decimal": 0, "default": "0", "reference": "SKU"},
     "Text ID": {"Field Description": "Text ID", "Group Name": "Key", "Importance": "mandatory for sheet", "Type": "Text", "Length": 80    , "Decimal": 0, "default": "BEST", "reference": "0"},
     "Language Key": {"Field Description": "Language Key", "Group Name": "Key", "Importance": "mandatory for sheet", "Type": "Text", "Length": 8, "Decimal": 0, "default": "HE", "reference": "0"},
@@ -9,7 +11,8 @@ long_text_elements = {
     }
 
 
-def long_text_schema():
+def long_text_schema() -> str:
+    # Schema string for creating DB
     schema_string_basic = "CREATE TABLE IF NOT EXISTS final_long_text ("
     id_line = "id INTEGER PRIMARY KEY NOT NULL"
     schema_string_basic = schema_string_basic + id_line

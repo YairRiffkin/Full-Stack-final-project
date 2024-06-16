@@ -2,12 +2,13 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from dbDemo import creating_demo
 from database.db import close_db, init_db
-from views.auth import auth
-from views.users import users
-from views.items import items
-from views.items import FinalProcessing
-from views.procurement import procurement
+from views import auth
+from views import users
+from views import items
+from views import FinalProcessing
+from views import procurement
 
 app = Flask(__name__)
 app.config.from_prefixed_env()

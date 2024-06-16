@@ -1,3 +1,5 @@
+// Display HTML elements for procurement pending items page
+
 import { MyResponseContainerType } from "../../models/Responsetypes"
 import { ProcurementFormDetail } from "../../models/formtypes";
 import { Item } from "../../models/itemtypes";

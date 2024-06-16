@@ -1,9 +1,14 @@
+// Checks frontend valid inputs before subbmision to reduce server load
 import { NewUser } from "../../models/usertypes";
 import { EmailWarning, EmployeeIdWarning, PasswordWarning, RegistrationFormDetails, UserNameWarning } from "../pages/RegistrationDisplayElements";
 
 export function UserNameValid(username: string) {
+  /*
+  1) No leading or lagging spaces.
+  2) Multiple names connected with dot.
+  3) 1 space between first and sir names.
+  */
   const warning: string[] = [];
-
     if (username) {
       const trimmedName = username.trim();
       if (username !== trimmedName) { warning.push(UserNameWarning[0]) } 
@@ -13,6 +18,11 @@ export function UserNameValid(username: string) {
 }
 
 export function EmployeeIdValid(employee_id: string) {
+  /*
+   1) No leading or lagging spaces.
+   2) Starts with E or T.
+   3) exactly 6 characters -> letter + 5 digits
+   */
   const warning: string[] = [];
   const trimmedName = employee_id.trim();
   const firstLetter = trimmedName.charAt(0).toLowerCase();
@@ -27,6 +37,11 @@ export function EmployeeIdValid(employee_id: string) {
 }
 
 export function EmailValid (email: string) {
+  /*
+  1) No leading or lagging spaces.
+  2) Email format.
+  3) Company mail -> xxx.com
+  */
   const warning: string[] = [];
   const trimmedName = email.trim();
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -42,6 +57,11 @@ export function EmailValid (email: string) {
 }
 
 export function PasswordValid(password: string){
+  /*
+  1) No leading or lagging spaces.
+  2) exactly 6 characters long.
+  3) At least: 1 capital, 1 small, 1 digit
+  */
   const warning: string[] = [];
   const trimmedName = password.trim();
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/;
@@ -54,6 +74,9 @@ export function PasswordValid(password: string){
 }
 
 export function SelectValid(select: string){
+  /*
+  1) Not choosing a select option is an error
+  */
   const warning: string[] = [];
 
     if (select === "--Choose--") { warning.push("You must choose an option") }
@@ -62,6 +85,7 @@ export function SelectValid(select: string){
 }
 
 export function PasswordVerify(password1: string, password2: string){
+  /* Both passwords are the same */
   const warning: string[] = [];
 
     if (password1 !== password2) { warning.push(PasswordWarning[3]) }
@@ -70,6 +94,7 @@ export function PasswordVerify(password1: string, password2: string){
 }
 
 export function CheckInputLine(name: string, value: string, value1: string) {
+  /* Goes through all the details for validation */
   let warning: string[] = [];
   if (name === "username") {
     warning = UserNameValid(value);}
@@ -87,6 +112,7 @@ export function CheckInputLine(name: string, value: string, value1: string) {
 }
 
 export function CheckFormComplete(form: NewUser, warnings: string[]) {
+  /* Checks all details are filled */
   let result: boolean = false;
   warnings.map((warning) => {
     if (warning !== "") { result = true; }
@@ -99,6 +125,7 @@ export function CheckFormComplete(form: NewUser, warnings: string[]) {
 }
 
 export function SetDefaultWarning(warnings: string[]) {
+  /*Default warning list to allow showing errors at first render */
   RegistrationFormDetails.map((detail, index) => {
     (detail.element === "select") ? (warnings[index] = "You must choose an option") : null;
   });
@@ -106,6 +133,7 @@ export function SetDefaultWarning(warnings: string[]) {
 }
 
 export function RegisterIssues(error: string[]) {
+  /* Display backend errors*/
   const detailsList: string[] = [];
   const itemList: string[] = [];
   for (const key in error) {
@@ -130,7 +158,7 @@ export function RegisterIssues(error: string[]) {
 }
 
 export function  WarningDisplay(warnings: string | null) {
-  
+  /* Display errors */
   if (warnings) {
     const splitWarning = warnings.split(",");
     console.log("in display warnings", warnings)

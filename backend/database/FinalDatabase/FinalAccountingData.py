@@ -1,5 +1,7 @@
+# handle the final data configuration
 
 accounting_data_elements = {
+    # list of standard requirements
     "Material Number": {"Field Description": "Material Number", "Group Name": "Key", "Importance": "mandatory for sheet", "Type": "Text", "Length": 80    , "Decimal": 0, "default": "0", "reference": "SKU"},
     "Valuation area": {"Field Description": "Valuation area", "Group Name": "Key", "Importance": "mandatory for sheet", "Type": "Text", "Length": 80    , "Decimal": 0, "default": "0", "reference": "plant"},
     "Valuation Category": {"Field Description": "Valuation Category", "Group Name": "Accounting 1 - General Valuation Data", "Importance": "", "Type": "Text", "Length": 80    , "Decimal": 0, "default": "C", "reference": "0"},
@@ -13,7 +15,8 @@ accounting_data_elements = {
     }
 
 
-def final_accounting_schema():
+def final_accounting_schema() -> str:
+    # Schema string for creating DB
     schema_string_basic = "CREATE TABLE IF NOT EXISTS final_accounting_data ("
     id_line = "id INTEGER PRIMARY KEY NOT NULL"
     schema_string_basic = schema_string_basic + id_line

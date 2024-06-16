@@ -1,3 +1,5 @@
+// Display HTML elements for pending users page
+
 import { Dispatch, SetStateAction } from "react";
 import { MyResponseContainerType } from "../../models/Responsetypes"
 import { FormDetail } from "../../models/formtypes";

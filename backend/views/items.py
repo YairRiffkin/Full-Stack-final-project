@@ -47,7 +47,7 @@ def new_item() -> dict:
     # error.append(new_item.check_item())
     print("error: ", error)
     if error:
-        return {"error": error}
+        return {"error": error}, 400
     else:
         print("no error so far")
         # Prepare data for database
@@ -64,7 +64,7 @@ def new_item() -> dict:
                   [new_item_db_data[1]],    # list of data
                   log_data                  # history log data
                   )
-        return {"data": "accepted"}
+        return {"data": "accepted"}, 200
 
 
 @bp.route("/items/pending", methods=["GET", "POST"])
@@ -84,7 +84,7 @@ def get_pending_data() -> dict:
     user_data = db_fetchone("users", ["user_level"], ["id"], [user_id])
     # Approval is possible only by administrator
     if user_data["user_level"] != "admin":
-        return {"error": "You are not authorized for this action"}
+        return {"error": "You are not authorized for this action"}, 401
     else:
         # Creating a display list with class attribute and database data
         if data["cost_center"] == "" or data["cost_center"] == "--Choose--":
@@ -139,7 +139,7 @@ def get_pending_data() -> dict:
                 str(data["Item_ID"]),           # data identifier is item id.
                 if_exists=True                  # function operator: if the id is already logged it will update. If not it will create
                 )
-        return {"data": return_data, "item": return_item, "maxSKU": return_maxSKU}
+        return {"data": return_data, "item": return_item, "maxSKU": return_maxSKU}, 200
 
 
 @bp.route("/items/approve", methods=["GET", "POST"])
@@ -157,7 +157,7 @@ def get_approve() -> dict:
     approver = user_data["user_level"]
     # action allowed only for administrator
     if approver != "admin":
-        return {"error": "You are not authorized for this action"}
+        return {"error": "You are not authorized for this action"}, 401
     else:
         log_data = [
             data["SKU"],                # item identifier
@@ -173,7 +173,7 @@ def get_approve() -> dict:
             str(data["Item_ID"]),           # if id = id
             log=log_data                    # action log data
             )
-        return {"data": "all good"}
+        return {"data": "all good"}, 200
 
 
 @bp.route("/items/list", methods=["GET", "POST"])
@@ -210,7 +210,7 @@ def get_item_list() -> dict:
                 item["rem"] = comment[0]
                 print("ITEM: ", item)
             return_item.append(item)
-        return {"item": return_item}
+        return {"item": return_item}, 200
     else:
         # In case someone got into the system without being registered
-        return {"error": "how the hell did you get here?"}
+        return {"error": "how the hell did you get here?"}, 401

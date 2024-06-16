@@ -100,12 +100,6 @@ export function ProcData({ userToken }: { userToken: string | null }) {
           const pendingDataLength = pendingData ? Object.keys(pendingData).length : 0;
           setIndexed(indexed >= pendingDataLength ? pendingDataLength - 1 : indexed);
           setComment("");
-          console.log("data: ", data.data);
-          // activating final processing
-          fetch(BACKEND_URL + "/final/update", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-          });
         }
     })
           .catch(error => {

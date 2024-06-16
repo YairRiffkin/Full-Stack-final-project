@@ -1,3 +1,5 @@
+// Front end validation for items to reduce server load
+
 import { ItemFormDetail } from "../../models/formtypes";
 import { Item, initializeItem } from "../../models/itemtypes";
 import { CostCenterList, ItemFormDetails, LocationList, MaterialTypeList, StorageLocList, notRequired } from "../pages/ItemFormDisplayElements";
@@ -72,6 +74,7 @@ export function ItemWarningDisplay(warning: string | null) {
 }
 
 export function ItemIssues(error: string[]) {
+  /* Display backend errors*/
   return  <small>Please address the below issues before submitting: 
             <ol>
               { error.map((item, index) => (
@@ -82,14 +85,17 @@ export function ItemIssues(error: string[]) {
 }
 
 export function DefaultDisplay(name: string, value: string) {
+  /*Set default values where details are connected to reduce mistakes */
   const correction: { [key: string]: string | null | undefined } = {};
 
   if (name.trim() === "plant") {
+    /*Plant inherently defines cost center */
     const defaultValue = LocationList.find(item => item.choice === value.trim());
     const newChoice = CostCenterList.find(item => item.description === defaultValue?.description);
     correction.profitCenter = newChoice?.choice ?? null;
   }
   if (name.trim() === "materialType") {
+    /*Material type inherently define storage location */
     const defaultValue = MaterialTypeList.find(item => item.choice === value.trim());
     const newChoice = StorageLocList.find(item => item.description === defaultValue?.description);
     correction.storageLocation = newChoice?.choice ?? null;

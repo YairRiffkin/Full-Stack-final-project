@@ -1,5 +1,7 @@
+# handle the final data configuration
 
 plant_data_elements = {
+    # list of standard requirements
     "Material Number": {"Field Description": "Material Number", "Group Name": "Key", "Importance": "mandatory for sheet", "Type": "Text", "Length": 80    , "Decimal": 0, "default": "0", "reference": "SKU"},
     "Plant": {"Field Description": "Plant", "Group Name": "Key", "Importance": "mandatory for sheet", "Type": "Text", "Length": 80    , "Decimal": 0, "default": "0", "reference": "plant"},
     "Material Views": {"Field Description": "Material Views", "Group Name": "Administrative Data", "Importance": "", "Type": "Text", "Length": 80    , "Decimal": 0, "default": "X", "reference": "0"},
@@ -35,7 +37,8 @@ plant_data_elements = {
     }
 
 
-def final_plant_data_schema():
+def final_plant_data_schema() -> str:
+    # Schema string for creating DB
     schema_string_basic = "CREATE TABLE IF NOT EXISTS final_plant_data ("
     id_line = "id INTEGER PRIMARY KEY NOT NULL"
     schema_string_basic = schema_string_basic + id_line

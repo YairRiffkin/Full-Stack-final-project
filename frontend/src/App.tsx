@@ -18,6 +18,7 @@ import { User } from './models/usertypes';
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { PendingUserRequest } from './pages/PendingUser';
 import { UpdateUserLevel } from './pages/UpdateUserStatus'
+import { FinalList } from './pages/FinalList'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -50,6 +51,7 @@ export default function App() {
             <Route path="/Procurement" element={<ProcData userToken={ userToken} />} />
             <Route path="/PendingUser" element={<PendingUserRequest userToken={ userToken} />} />
             <Route path="/UserLevel" element={<UpdateUserLevel userToken={ userToken} />} />
+            <Route path="/FinalList" element={<FinalList userToken={ userToken} />} />
             <Route path="/register" element={<NewUserRequest setUserDetails={setUserDetails} userDetails={userDetails}/>} />
             <Route path="/logout" element={<Logout />} />
           </Routes>

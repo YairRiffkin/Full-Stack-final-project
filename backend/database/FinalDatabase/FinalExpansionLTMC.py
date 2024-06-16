@@ -1,5 +1,7 @@
+# handle the final data configuration
 
 expansion_LTMC_elements = {
+    # list of standard requirements
     "Material Number": {"Field Description": "Material Number", "Group Name": "Key", "Importance": "mandatory for sheet", "Type": "Text", "Length": 80    , "Decimal": 0, "default": "0", "reference": "SKU"},
     "Language Key": {"Field Description": "Language Key", "Group Name": "Mandatory", "Importance": "mandatory for sheet", "Type": "Text", "Length": 80    , "Decimal": 0, "default": "HE", "reference": "0"},
     "Material description": {"Field Description": "Material description", "Group Name": "Mandatory", "Importance": "mandatory for sheet", "Type": "Text", "Length": 40    , "Decimal": 0, "default": "0", "reference": "short_hebrew"},
@@ -26,7 +28,8 @@ expansion_LTMC_elements = {
     }
 
 
-def final_expansion_schema():
+def final_expansion_schema() -> str:
+    # Schema string for creating DB
     schema_string_basic = "CREATE TABLE IF NOT EXISTS final_expansion_LTMC ("
     id_line = "id INTEGER PRIMARY KEY NOT NULL"
     schema_string_basic = schema_string_basic + id_line

@@ -7,6 +7,7 @@ export function adminView() {
         <Link to="/PendingItem">Pending Items</Link>
         <Link to="/PendingUser">Pending Users</Link>
         <Link to="/UserLevel">UpdateLevel</Link>
+        <Link to="/FinalList">Final List</Link>
     </>
 }
 

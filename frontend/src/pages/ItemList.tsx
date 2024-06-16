@@ -117,7 +117,7 @@ export function ItemList ({ userToken }: { userToken: string | null }) {
               ))}
             </DataTable>
           ) : (
-            <p>Loading...</p> // Or any other loading indicator
+            <p>Loading...</p>
           )}
         </div>
       );

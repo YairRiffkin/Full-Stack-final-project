@@ -1,3 +1,4 @@
+# Functions to check password operations
 
 import datetime
 import re
@@ -7,7 +8,7 @@ from database.db import get_db
 
 def ok_to_update_password(user_id: int) -> bool:
     """
-    Checks if the user has entered his old password in the last 10 minutes
+    Checks if the user has entered his old password in the last X minutes
     """
     db = get_db()
     cursor = db.cursor()
@@ -21,14 +22,22 @@ def ok_to_update_password(user_id: int) -> bool:
     created_time = datetime.datetime.strptime(timestamp["created"], "%Y-%m-%d %H:%M:%S")
     current_time = datetime.datetime.now()
     time_difference = (current_time - created_time).total_seconds() / 60
-    print("difference: ", float(time_difference))
-    if time_difference < 10:
+    if time_difference < 3:
         return True
     else:
         return False
 
 
 def check_password(password1, password2) -> str:
+    """Checks for correct password
+
+    Args:
+        password1 (_type_): password input
+        password2 (_type_): password verification
+
+    Returns:
+        str: exceptions if wrong, none if correct
+    """
     exceptions = {}
     exceptions["Password"] = []
     if password1 == password2:
