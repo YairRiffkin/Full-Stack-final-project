@@ -44,3 +44,5 @@ Pipfile.lock
 .dmypy.json
 dmypy.json
 
+coverage/
+
