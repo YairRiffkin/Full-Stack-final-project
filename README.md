@@ -1,67 +1,75 @@
-My Final Project
+John Bryce Full Stack Project
 
-**Short Description:**
+This is an app to register and approve mechanical spare parts for purchase and inventory management.
 
-This app is intended for registering new technical spare parts into the company ERP database.
+It is based on a standard that is shown in the excel file attached to this project folder.
 
-The company standard defines what details should be submitted and in which format, and what needs to be included in the final registration form.
+Usage
 
-It has 3 main processes:
+To run the project locally, follow these steps:
 
--   Users:
-    -   Registration
-    -   Approval (defining user level in the process)
-    -   Editing details (by user) or changing user level status (by administrator)
--   Items:
-    -   Registration
-    -   Approval in 2 stages – 1) By administrator to verify that details have been submitted correctly, 2) By procurement to verify compliance to procurement standard.
--   Final application:
-    -   Creates a submission form in a predefined standard format.
+git clone https://github.com/YairRiffkin/Full-Stack-final-project
 
-**General:**
+cd Full-Stack-final-project
 
-As I wanted to do something a bit different and challenging for this final project, together with having something that might be practical, I decided on this APP which fulfills a challenge I faced at work.
+Backend API server (Flask)
 
-The main challenges I faced, apart from writing full stack code for the first time in my life, were:
+Build the backend dependencies. Make sure to run the following commands in the backend directory (and it's recommended to use a virtual environment):
 
-1.  Finding solutions for specific designs I thought were needed for the end user.
-2.  Large format inputs for the item details. These include in the most basic version 31 details.
-3.  Creating default dependencies for user friendliness and standard compliance.
-4.  The biggest challenge right at the start was to create a fixed, 1-fits-all navbar that adapts to user level on login.
+pip install -r requirements.txt
 
-**Functionality:**
+WARNING!
 
-| PROCESS | STAGE        | REQUIREMENTS                                                                                                                                                                                                                                                                                                                                                                           | AUTHORIZATION         |
-|---------|--------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------|
-| User    | Registration | Any user can only be a company employee. Therefore, identifying details that cannot be changed or used with other users are an employee ID number and a valid company email.                                                                                                                                                                                                           | Any employee          |
-|         | Approval     | Admin will approve or not a registered user and designation 1 of 4 user levels: Admin User – allowed to register new items but only to his workplace location. Proc – procurement user that can only approve items but not introduce new ones. Guest – has only the possibility to view the existing item list.                                                                        | Admin                 |
-|         | Update       | Every user can update his details or password. Employee ID and email cannot be changed.                                                                                                                                                                                                                                                                                                | Any user              |
-|         | User Level   | Administrator is allowed to change user level status at any time.                                                                                                                                                                                                                                                                                                                      | Admin                 |
-| Item    | Registration | A new item can be submitted by any “user” level user. There are required fields and optional fields. Leading detail for duplication validation is manufacturer part number which is unique globally. Item type defines storage location. Location defines cost center definition Only administrator can open an item for any location. Users can only submit items for their location. | Any “user” level user |
-|         | Approval     | Administrator can review the submission form and: Approve – giving the item a unique SKU number. Dismiss – administrator has an option to add a comment for why the item has not been approved. This comment can be seen by the user when viewing the items list.                                                                                                                      | Admin                 |
-|         | Procurement  | “proc” level user can see the pending items with details relevant to him/her and approve or dismiss with a comment as above.                                                                                                                                                                                                                                                           | Proc                  |
-|         | Final        | When the item has been approved by procurement the administrator can choose which items to send for entry to the ERP data base by the Masterdata dep.                                                                                                                                                                                                                                  | Admin                 |
+Change the value of the FLASK_SECRET_KEY in the backend/.env file to a random string. This is used to secure the session cookies / JWT tokens.
 
-Log Data:
+After that you can run the backend server (inside the backend directory
 
-All actions performed are logged in a “history” table for reference and troubleshooting.
+flask run
 
-For items:
+If you need to run the backend tests you first need to install the test / dev dependencies:
 
-|      | Action          | Status    | Next  |
-|------|-----------------|-----------|-------|
-| User | register        | pending   | admin |
-|      | approved        | active    | -     |
-|      | update          | unchanged | -     |
-|      | login           | unchanged | -     |
-|      | Password update | unchanged | -     |
-| Item | register        | pending   | admin |
-|      | approved        | proc      | proc  |
-|      | approved        | final     | admin |
+pip install -r requirements-dev.txt
 
-Demo Data:
+pytest
 
-To ease demonstration of the application, I have introduced 2 features:
+Frontend (react/Vite/TypeScript)
 
-1.  Basic data to start with.
-    1.  When entering the app. You can run backend\\dbDemo.py
+From within the [frontend](https://github.com/YairRiffkin/Full-Stack-final-project/tree/main/frontend) directory, run the following commands:
+
+npm install
+
+npm run dev
+
+You should be able to access the project at [http://localhost:5173](http://localhost:5173/) in your browser (the port may change, check the output of the npm run dev command).
+
+You can also run the frontend tests:
+
+npm run test
+
+Database
+
+The backend uses SQLite as the database. The database file is created automatically when the backend server is started. If it didn't, or if you need to reset the database, you can delete the backend/db/data.db file and restart the backend server. The database will be recreated.
+
+The app will also create the first admin username for you automatically.
+
+The username is: E74323
+
+The password is: Aa1234
+
+WARNING!
+
+The initial admin user is created only once, when the database file is created. If you delete the database file, the initial admin user will be created again. It is also highly recommended to change the initial admin password after the first login.
+
+Demo data for using the application
+
+Backend:
+
+From the /backend directory run the file [dbDemo](https://github.com/YairRiffkin/Full-Stack-final-project/blob/main/backend/dbDemo.py).
+
+This will fill the database with items and users at different levels.
+
+Front end:
+
+I have added a feature in the /newitem page to choose from a list of item data, to save the time for typing in all the details.
+
+The user still needs to enter a few details to complete the form for submission.
