@@ -174,7 +174,6 @@ class Item:
                 error.append(check[0])
             check = self.check_required(str(detail), value)
             if check[1] and check[0] not in error:
-                print("detail: ", detail)
                 error.append(check[0])
             if detail == "plant":
                 check = self.check_costcenter(value)
@@ -190,7 +189,6 @@ class Item:
         """
         is_duplicate = False
         item = db_fetchone("itemsbasic", ["id"], ["man_part_num", "supplier_num"], [self.manufacturerPartNumber, self.supplierNumber])
-        print("duplicate item", item)
         if item:
             is_duplicate = True
         return is_duplicate

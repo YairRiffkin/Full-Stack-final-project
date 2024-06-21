@@ -17,8 +17,7 @@ export type UserDataProps = {
 
 export function UserEdit({ userDetails, userToken }: UserDataProps) {
   const formDetails: FormDetail[] = RegistrationFormDetails;
-  const userData = localStorage.getItem("userData");
-  const defaultForm = userData ? JSON.parse(userData) : null;
+  const defaultForm = userDetails ? userDetails : null;
   const [registerForm, setRegisterForm] = useState<NewUser>({ username: defaultForm?.username || "",
                                                               employee_id: defaultForm?.employee_id || "",
                                                               email: defaultForm?.email || "",
@@ -40,7 +39,6 @@ export function UserEdit({ userDetails, userToken }: UserDataProps) {
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const index = formDetails.findIndex((detail) => detail.name === e.target.name);
-    console.log("target value: ", e.target.value)
     const newWarning = CheckUserUpdateInputLine(String(e.target.name),
                                       e.target.value,
                                       e.target.name === "password2" ? 
@@ -59,6 +57,7 @@ export function UserEdit({ userDetails, userToken }: UserDataProps) {
       [name]: value,
     }));
   };
+
 
   return  <form className="display-box">
             { (error) ? RegisterIssues(error) : null }
@@ -82,13 +81,16 @@ export function UserEdit({ userDetails, userToken }: UserDataProps) {
                     }
                     return (
                     <tr key={index}>
-                      <td>{ formDetail.placeholder }</td>
+                      <td>
+                        { formDetail.placeholder }
+                      </td>
                       <td>
                       { formDetail.element === "input" &&  (
                           <input 
                             disabled= { (formDetail.name === "employee_id" || formDetail.name === "email") ? true : false }               
                             type= {formDetail.type}
                             name= {formDetail.name}
+                            placeholder= {formDetail.placeholder}
                             value={ registerForm[formDetail.name] }
                             maxLength={formDetail.maxLength || undefined}
                             onChange= { handleChange }
@@ -96,10 +98,13 @@ export function UserEdit({ userDetails, userToken }: UserDataProps) {
                       )}
                         {formDetail.element === "select" && (
                           <div style = {{ display: "flex ", alignItems: "top" }}>
-                            <label style = {{ marginRight: "10px" }}>
-                              {formDetail.placeholder}: 
+                            <label 
+                              htmlFor={ formDetail.name }
+                              style = {{ marginRight: "10px" }}>
+                              {formDetail.placeholder}
                             </label>
                               <select 
+                                id= { formDetail.name }
                                 name= { formDetail.name } 
                                 value= {registerForm[formDetail.name]} 
                                 onChange= { (e) => handleChange(e) }
@@ -144,7 +149,6 @@ export function UserEdit({ userDetails, userToken }: UserDataProps) {
                               })
                               .then(response => response.json())
                               .then(data => { 
-                                console.log("update response: ", data);
                                 if (data.error) { setError(data.error) }
                                 if (data) {
                                   localStorage.setItem("message", UpdateHomeMessage)
@@ -156,7 +160,7 @@ export function UserEdit({ userDetails, userToken }: UserDataProps) {
                             
                         }}
                 >
-                  { formComplete ? <span>Complete the form</span> :<strong>UPDATE</strong> }
+                  { formComplete ? <span>Complete the form</span> :<span>UPDATE</span> }
                 </button>
             </div>
           </form>;

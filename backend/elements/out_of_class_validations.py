@@ -12,20 +12,24 @@ def ok_to_update_password(user_id: int) -> bool:
     """
     db = get_db()
     cursor = db.cursor()
-    cursor.execute(f"""
-                                SELECT created FROM history
-                                WHERE action = 'check password'
-                                AND relative = {user_id}
-                                ORDER BY id DESC LIMIT 1""")
-    timestamp = cursor.fetchone()
-    print("timestamp: ", timestamp["created"])
-    created_time = datetime.datetime.strptime(timestamp["created"], "%Y-%m-%d %H:%M:%S")
-    current_time = datetime.datetime.now()
-    time_difference = (current_time - created_time).total_seconds() / 60
-    if time_difference < 3:
-        return True
-    else:
+    try:
+        cursor.execute(f"""
+                                    SELECT created FROM history
+                                    WHERE action = 'check password'
+                                    AND relative = {user_id}
+                                    ORDER BY id DESC LIMIT 1""")
+        timestamp = cursor.fetchone()
+        print("timestamp: ", timestamp["created"])
+        created_time = datetime.datetime.strptime(timestamp["created"], "%Y-%m-%d %H:%M:%S")
+        current_time = datetime.datetime.now()
+        time_difference = (current_time - created_time).total_seconds() / 60
+        if time_difference < 3:
+            return True
+        else:
+            return False
+    except TypeError:
         return False
+
 
 
 def check_password(password1, password2) -> str:

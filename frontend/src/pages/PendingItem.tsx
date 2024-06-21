@@ -19,8 +19,6 @@ export function PendingItemRequest({ userToken }: { userToken: string | null }) 
     const [isTyping, setIsTyping] = useState<boolean>(false);
     let scrollItem = 1;
 
-    console.log("MAX: ", maxItemNumber)
-
     useEffect(() => {
       fetch(BACKEND_URL + "/items/pending", {
         method: "POST",
@@ -42,7 +40,6 @@ export function PendingItemRequest({ userToken }: { userToken: string | null }) 
         })
       .then(data => {            
         if (data && data.data) {
-          console.log("DATA: ", data.item)
           setComment("")
           setPendingData(data.data);
           setItemDetails(data.item)
@@ -52,7 +49,6 @@ export function PendingItemRequest({ userToken }: { userToken: string | null }) 
             setDisplay(null);
           }
           if (data.maxSKU) {
-            console.log(parseInt(data.maxSKU), maxItemNumber)
             setMaxItemNumber(Math.max(parseInt(data.maxSKU), maxItemNumber));
           }
         } 
@@ -67,7 +63,6 @@ export function PendingItemRequest({ userToken }: { userToken: string | null }) 
       }, [userToken, selectLoc, approvalStatus, isTyping]);
 
     const handleScroll = () => {
-      console.log(maxItemNumber)
       setIndexed((prevIndexed) => {
         const pendingDataLength = pendingData ? Object.keys(pendingData).length : 0;
         if (itemDetails && (prevIndexed < pendingDataLength || prevIndexed > 0)) {
@@ -111,8 +106,6 @@ export function PendingItemRequest({ userToken }: { userToken: string | null }) 
           const pendingDataLength = pendingData ? Object.keys(pendingData).length : 0;
           setIndexed(indexed >= pendingDataLength ? pendingDataLength - 1 : indexed);
           setComment("")
-          console.log("data: ", data.data);
-          console.log("max SKU:", maxItemNumber)
     }})
           .catch(error => {
             console.error("Error:", error);

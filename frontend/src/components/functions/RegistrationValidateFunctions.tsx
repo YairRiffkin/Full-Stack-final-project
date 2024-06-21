@@ -161,7 +161,6 @@ export function  WarningDisplay(warnings: string | null) {
   /* Display errors */
   if (warnings) {
     const splitWarning = warnings.split(",");
-    console.log("in display warnings", warnings)
     return (
       <>
         {splitWarning.map((warning, index) => (

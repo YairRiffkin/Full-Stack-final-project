@@ -66,7 +66,6 @@ export function ItemTrLeadColumns( { itemDetail} : ItemTrLeadColumnsProps) {
 }
 
 export function ItemInputInput({ itemDetail, handleChange, itemForm }: ItemInputProps) {
-  // console.log("INPUT ==> name: ", itemDetail.name, "value: ", itemForm[itemDetail.name as keyof Item])
   return (
     <input
       type= {itemDetail.type}
@@ -79,7 +78,6 @@ export function ItemInputInput({ itemDetail, handleChange, itemForm }: ItemInput
 }
 
 export function ItemTextAreaInput({ itemDetail, handleChange, itemForm }: ItemInputProps) {
-  // console.log("TEXTAREA ==> name: ", itemDetail.name, "value: ", itemForm[itemDetail.name as keyof Item])
   return (
     <textarea
       className="multiline-input"
@@ -111,7 +109,6 @@ export function ItemSelectInput({ itemDetail, handleChange, itemForm, userLevel 
 }
 
 export function ItemSubmitButton({ itemComplete, setError, itemForm, userToken }: ButtonProps) {
-  console.log("form complete: ", itemComplete, itemForm)
   return (
     <button type= "submit"
                       disabled={itemComplete}
@@ -127,12 +124,10 @@ export function ItemSubmitButton({ itemComplete, setError, itemForm, userToken }
                           })
                           .then(response => response.json())
                           .then(data => { 
-                            console.log("register data: ", data);
                             if (data.error) { setError(data.error) }
                             if (data.data) {
                               setError(null);
                             }
-                            console.log("DATA: ", data)
                           })
                           .catch((error) => alert("Error submitting item: " + error));
                       }}      

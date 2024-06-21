@@ -102,7 +102,6 @@ export function NewUserRequest({ setUserDetails }: UserDataProps) {
                       disabled={formComplete}
                       onClick={(e) => {
                         e.preventDefault(); 
-                        console.log("error: ", error);
                         fetch(BACKEND_URL + "/users/new_user", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
@@ -110,7 +109,6 @@ export function NewUserRequest({ setUserDetails }: UserDataProps) {
                             })
                             .then(response => response.json())
                             .then(data => { 
-                              console.log("register data: ", data);
                               if (data.error) { setError(data.error) }
                               if (data.userData) { 
                                 setUserDetails(data.userData);

@@ -1,4 +1,4 @@
-import { ActiveHeader, BlankHeader, BlankHomepage, HomeBodyDisplay, HomeDisplay, PendingHeader, UpdateHeader } from "../components/pages/HomePageDisplayElements";
+import { ActiveHeader, BlankHeader, HomeBodyDisplay, PendingHeader, UpdateHeader } from "../components/pages/HomePageDisplayElements";
 import { User } from "../models/usertypes";
 import '../components/static/GeneralPage.css'
 import { useLocation } from "react-router-dom";
@@ -7,7 +7,6 @@ import { useLocation } from "react-router-dom";
 export function HomePage({ userDetails }: { userDetails: User | null }) {
   const user = useLocation().state;
   let displayDetails: User | null
-  console.log("user: ", user)
   let status: string;
   if (user) {
     status = "updated"

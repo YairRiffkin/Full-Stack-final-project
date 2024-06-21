@@ -1,4 +1,4 @@
-import { ChangeEvent, ChangeEventHandler, useState } from "react"
+import { ChangeEventHandler, useState } from "react"
 import { WarningDisplay } from "../functions/RegistrationValidateFunctions"
 
 
@@ -20,7 +20,6 @@ export function UpdatePassword( { handleChange, index, warnings, userToken }: Up
     const [specificWarning, setSpecificWarning] = useState(null)
     const handleOldPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
         const oldPassword = e.target.value;
-        console.log("password: ", JSON.stringify({ password: oldPassword }))
         fetch(BACKEND_URL + "/users/password", {
             method: "POST",
             headers: { 
@@ -49,6 +48,7 @@ export function UpdatePassword( { handleChange, index, warnings, userToken }: Up
                                 className="form-box"
                                 type= "password"
                                 name= "old_password"
+                                placeholder="Old Password"
                                 maxLength= {6}
                                 onBlur= { handleOldPassword }
                         /> 
@@ -64,6 +64,7 @@ export function UpdatePassword( { handleChange, index, warnings, userToken }: Up
                                 key = {index }
                                 type= "password"
                                 name= "password1"
+                                placeholder="New Password"
                                 maxLength= {6}
                                 onChange= { handleChange }
                         /> 
@@ -79,6 +80,7 @@ export function UpdatePassword( { handleChange, index, warnings, userToken }: Up
                             key = {index + 1 }
                             type= "password"
                             name= "password2"
+                            placeholder="Verify Password"
                             maxLength= {6}
                             onChange= { handleChange }
                         /> 

@@ -163,11 +163,9 @@ class User:
         """
         is_duplicate = False
         user = db_fetchone("users", ["id"], ["employee_id"], [self.employee_id])
-        print("user= ", user, "self= ", self.employee_id)
         if user:
             is_duplicate = True
         user = db_fetchone("users", ["id"], ["email"], [self.email])
-        print("user= ", user, "self= ", self.employee_id)
         if user:
             is_duplicate = True
         return is_duplicate

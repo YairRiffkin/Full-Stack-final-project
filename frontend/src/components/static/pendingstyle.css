@@ -12,6 +12,14 @@
   overflow-y: auto;
 }
 
+.scroll-box input{
+  width: auto; /* Allow the input to expand based on content */
+  min-width: 50px; /* Optionally, set a minimum width */
+  padding: 5px; /* Add padding for better appearance */
+  border: 1px solid #ccc; /* Add border for visual distinction */
+  box-sizing: border-box;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -66,4 +74,9 @@
   width: 100%;
   height: 100%;
   resize: none;
+}
+
+input {
+  display: flex;
+  width: 100%;
 }

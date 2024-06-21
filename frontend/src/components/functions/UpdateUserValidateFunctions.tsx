@@ -19,7 +19,6 @@ export function CheckUserUpdateInputLine(name: string, value: string, value1: st
     warning = PasswordValid(value);}
   if (name === "password2") {
     warning = PasswordVerify(value, value1);}
-  console.log("check input line warning: ", warning)
   return warning;
 }
 

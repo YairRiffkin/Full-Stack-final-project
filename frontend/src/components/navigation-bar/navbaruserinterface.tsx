@@ -13,9 +13,8 @@ export function adminView() {
 
 export function userView() {
     return <div>
-        <Link to="/item">Items List</Link>
+        <Link to="/ItemList">Items List</Link>
         <Link to="/newitem">New Item</Link>
-        <Link to="/pending">Pending Requests</Link>
     </div>
 }
 

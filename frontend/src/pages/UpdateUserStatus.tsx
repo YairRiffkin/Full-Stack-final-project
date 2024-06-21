@@ -15,9 +15,7 @@ export function UpdateUserLevel({ userToken }: { userToken: string | null }) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log("input before: ", inputComplete);
         if (inputComplete) {
-            console.log("input complete", employeeID);
             fetch(BACKEND_URL + "/users/getdata", {
                             method: "POST",
                             headers: { 
@@ -28,25 +26,20 @@ export function UpdateUserLevel({ userToken }: { userToken: string | null }) {
                           })
                             .then(response => response.json())
                             .then(data => {
-                                console.log("data: ", data);
                                 if (data.error) {
-                                    console.log("error: ", error);
                                     setError(JSON.stringify(data.error));
                                 } else {
                                     setUser(data.data);
                                     setUserLEvel(data.data.user_level)
-                                    console.log("data: ", data.data);
                                 }
                                 })
                             .catch((error) => alert("Error fetching data: " + error));
             
         }
         setInputComplete(false);
-        console.log("input after: ", inputComplete);
       }, [employeeID, error, inputComplete, userToken]);
 
     function CheckInputLine(e: React.ChangeEvent<HTMLInputElement>) {
-        console.log("Checking input", e.target.value)
         if (e.target.value.length === 6 && /^[et]/i.test(e.target.value)) {
             setError(null)
             setInputComplete(true);
@@ -69,12 +62,9 @@ export function UpdateUserLevel({ userToken }: { userToken: string | null }) {
         })
         .then(response => response.json())
         .then(data => {
-            console.log("data: ", data);
             if (data.error) {
-                console.log("error: ", error);
                 setError(JSON.stringify(data.error));
             } else {
-                console.log("data: ", data.data);
                 navigate('/', { state: user} );
                 
             }
@@ -95,7 +85,6 @@ export function UpdateUserLevel({ userToken }: { userToken: string | null }) {
                         value = { employeeID }
                         onChange= { (e: React.ChangeEvent<HTMLInputElement>) => {
                             setEmployeeID(e.target.value);
-                            console.log("employeeId: ", employeeID)
                             CheckInputLine(e);
                         }}
                     />

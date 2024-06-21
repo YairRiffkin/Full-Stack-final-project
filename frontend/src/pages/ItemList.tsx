@@ -50,7 +50,6 @@ export function ItemList ({ userToken }: { userToken: string | null }) {
         })
       .then(data => {            
         if (data && data.item) {
-          console.log("DATA: ", data)
           setItemDetails(data.item);
         }
       })

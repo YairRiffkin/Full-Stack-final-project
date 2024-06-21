@@ -2,7 +2,6 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
-from dbDemo import creating_demo
 from database.db import close_db, init_db
 from views import auth
 from views import users
@@ -12,7 +11,7 @@ from views import procurement
 
 app = Flask(__name__)
 app.config.from_prefixed_env()
-FRONTEND_URL = app.config.get("FRONTEND_URL")
+FRONTEND_URL = app.config.get("FRONTEND_URL", "*")
 cors = CORS(app, origins=FRONTEND_URL, methods=["GET", "POST", "DELETE"])
 jwt = JWTManager(app)
 app.teardown_appcontext(close_db)

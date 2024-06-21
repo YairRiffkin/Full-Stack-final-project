@@ -4,11 +4,11 @@
 # 3. Item approval by Administrator.
 # 4. Full items list.
 
-from flask import Blueprint, request
+from flask import Blueprint, app, current_app, request
 from flask_jwt_extended import get_jwt, jwt_required
 from database.db import get_db
 from models.items import Item
-from database.dbelements.dbfunctions import db_fetchall, db_fetchone, db_insert, db_maxSKU, db_set
+from database.dbelements.dbfunctions import db_fetchall, db_fetchone, db_insert, db_list, db_maxSKU, db_set
 
 bp = Blueprint("items", __name__)
 
@@ -22,34 +22,35 @@ def new_item() -> dict:
                 key: Data, if the action was performed.
     """
     error = []
-    print("in new item app")
     token_data = get_jwt()
     user_id = token_data["sub"]
     data = request.get_json()
-    user_data = db_fetchone("users",
-                            ["location", "employee_id", "user_level"],
-                            ["id"], [user_id]
-                            )
-    user_level = user_data["user_level"]
+    try:
+        user_data = db_fetchone("users",
+                                ["location", "employee_id", "user_level"],
+                                ["id"], [user_id]
+                                )
+        user_level = user_data["user_level"]
+    except TypeError:
+        user_level = ""
     # Item registration allowed only for User and Administrator
     if user_level != "user" and user_level != "admin":
-        error.append("You are not authorized for this action")
+        error.append("You are not authorized for this action"), 401
     new_item = Item(*(data.get(attr) if data.get(attr) else None for attr in Item.__annotations__))
     # User can only register an item for his location of work
     if new_item.plant != Item.locations[user_data["location"]] and user_level == "user":
         error.append("You are not authorized for this site.")
     if new_item.item_is_duplicate():
         error.append("There is already an item from this supplier with the same manufacturer number")
-    # Checking item details validation according to standard
-    check_error = new_item.check_item()
-    if check_error:
-        error.append(new_item.check_item())
-    # error.append(new_item.check_item())
-    print("error: ", error)
+    if not error:
+        # Checking item details validation according to standard
+        check_error = new_item.check_item()
+        if check_error:
+            error.append(new_item.check_item())
+        # error.append(new_item.check_item())
     if error:
         return {"error": error}, 400
     else:
-        print("no error so far")
         # Prepare data for database
         new_item_db_data = new_item.make_db_data("pending")
         log_data = [
@@ -81,9 +82,12 @@ def get_pending_data() -> dict:
     token_data = get_jwt()
     user_id = token_data["sub"]
     data = request.get_json()
-    user_data = db_fetchone("users", ["user_level"], ["id"], [user_id])
+    try:
+        user_data = db_fetchone("users", ["user_level"], ["id"], [user_id])["user_level"]
+    except TypeError:
+        user_data = ""
     # Approval is possible only by administrator
-    if user_data["user_level"] != "admin":
+    if user_data != "admin":
         return {"error": "You are not authorized for this action"}, 401
     else:
         # Creating a display list with class attribute and database data
@@ -94,51 +98,56 @@ def get_pending_data() -> dict:
             cost_center = data["cost_center"]
             columns = ["profit_center", "status"]
             parameters = [cost_center, "pending"]
-        return_details = db_fetchall("itemsbasic",  # database
-                                     ["*"],         # data to fetch
-                                     columns,       # if this data..
-                                     parameters     # equals to this
-                                     )
-        item_list = [dict(row) for row in return_details]
-        annotations = list(Item.__annotations__.keys())
-        annotations.remove("id")
-        key_map = dict(zip(Item.database_columns, annotations))
-        index = 1
-        return_data = {}
-        return_item = {}
-        return_maxSKU = ""
-        for item in item_list:
-            db_row = db_fetchone(
-                "history",                          # database
-                ["by", "created", "action"],        # data to fetch
-                ["current", "next", "relative"],    # if this data..
-                ["pending", "admin", item["id"]]    # equals to this
-                )
-            name = db_fetchone(
-                "users",            # database
-                ["username"],        # data to fetch
-                ["employee_id"],    # if this data...
-                [db_row["by"]]      # equals to this
-                )
-            relative = item["id"]
-            item.pop("id")
-            item = {key_map.get(k, k): v for k, v in item.items()}
-            row_dict = dict(zip(["by", "created", "action"], db_row))
-            row_dict["username"] = str(name[0])
-            row_dict["relative"] = relative
-            return_data[index] = row_dict
-            return_item[index] = item
-            index += 1
-        return_maxSKU = db_maxSKU()
-        # if the administrator does not approve but there is a comment it will be stored in the database for reference
-        if data["comment"]:
-            db_set(
-                "comments",                     # datbase
-                ["comment"],                    # data to update
-                [repr(str(data["comment"]))],   # comment
-                str(data["Item_ID"]),           # data identifier is item id.
-                if_exists=True                  # function operator: if the id is already logged it will update. If not it will create
-                )
+        try:
+            return_details = db_fetchall("itemsbasic",  # database
+                                         ["*"],         # data to fetch
+                                         columns,       # if this data..
+                                         parameters     # equals to this
+                                         )
+            item_list = [dict(row) for row in return_details]
+            annotations = list(Item.__annotations__.keys())
+            annotations.remove("id")
+            key_map = dict(zip(Item.database_columns, annotations))
+            index = 1
+            return_data = {}
+            return_item = {}
+            return_maxSKU = ""
+            for item in item_list:
+                db_row = db_fetchone(
+                    "history",                          # database
+                    ["by", "created", "action"],        # data to fetch
+                    ["current", "next", "relative"],    # if this data..
+                    ["pending", "admin", item["id"]]    # equals to this
+                    )
+                name = db_fetchone(
+                    "users",            # database
+                    ["username"],        # data to fetch
+                    ["employee_id"],    # if this data...
+                    [db_row["by"]]      # equals to this
+                    )
+                relative = item["id"]
+                item.pop("id")
+                item = {key_map.get(k, k): v for k, v in item.items()}
+                row_dict = dict(zip(["by", "created", "action"], db_row))
+                row_dict["username"] = str(name[0])
+                row_dict["relative"] = relative
+                return_data[index] = row_dict
+                return_item[index] = item
+                index += 1
+            return_maxSKU = db_maxSKU()
+            # if the administrator does not approve but there is a comment it will be stored in the database for reference
+            if data["comment"]:
+                db_set(
+                    "comments",                     # datbase
+                    ["comment"],                    # data to update
+                    [repr(str(data["comment"]))],   # comment
+                    str(data["Item_ID"]),           # data identifier is item id.
+                    if_exists=True                  # function operator: if the id is already logged it will update. If not it will create
+                    )
+        except TypeError:
+            return_data = {}
+            return_item = {}
+            return_maxSKU = ""
         return {"data": return_data, "item": return_item, "maxSKU": return_maxSKU}, 200
 
 
@@ -153,8 +162,11 @@ def get_approve() -> dict:
     token_data = get_jwt()
     user_id = token_data["sub"]
     data = request.get_json()
-    user_data = db_fetchone("users", ["user_level", "employee_id"], ["id"], [user_id])
-    approver = user_data["user_level"]
+    try:
+        user_data = db_fetchone("users", ["user_level", "employee_id"], ["id"], [user_id])
+        approver = user_data["user_level"]
+    except TypeError:
+        approver = ""
     # action allowed only for administrator
     if approver != "admin":
         return {"error": "You are not authorized for this action"}, 401
@@ -202,13 +214,10 @@ def get_item_list() -> dict:
                                   ["comment"],
                                   ["id"], [item["id"]]
                                   )
-            if comment and comment[0]:
-                print("comment: ", comment[0])
             item = {key_map.get(k, k): v for k, v in item.items()}
             # getting comments if exist
             if comment and comment[0]:
                 item["rem"] = comment[0]
-                print("ITEM: ", item)
             return_item.append(item)
         return {"item": return_item}, 200
     else:

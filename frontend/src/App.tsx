@@ -1,7 +1,7 @@
 
-import 'primereact/resources/themes/saga-blue/theme.css'; //theme
-import 'primereact/resources/primereact.min.css'; //core css
-import 'primeicons/primeicons.css'; //icons
+import 'primereact/resources/themes/saga-blue/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/Login';
@@ -52,7 +52,7 @@ export default function App() {
             <Route path="/PendingUser" element={<PendingUserRequest userToken={ userToken} />} />
             <Route path="/UserLevel" element={<UpdateUserLevel userToken={ userToken} />} />
             <Route path="/FinalList" element={<FinalList userToken={ userToken} />} />
-            <Route path="/register" element={<NewUserRequest setUserDetails={setUserDetails} userDetails={userDetails}/>} />
+            <Route path="/register" element={<NewUserRequest setUserDetails={setUserDetails} />} />
             <Route path="/logout" element={<Logout />} />
           </Routes>
         </div>

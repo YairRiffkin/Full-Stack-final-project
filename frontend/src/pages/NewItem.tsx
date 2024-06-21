@@ -28,9 +28,7 @@ export function NewItemLog({ userDetails, userToken }: UserDataProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     
     const defaultDisplay = DefaultDisplay(String(e.target.name), String(e.target.value));
-    console.log("Default display: ", defaultDisplay)
     if (Object.keys(defaultDisplay).length > 0) {
-      console.log("in default")
       const [key, value] = Object.entries(defaultDisplay)[0];
       const index = itemFormDetails.findIndex((detail) => detail.name === key);
       (itemForm as any)[key] = value;
@@ -41,11 +39,8 @@ export function NewItemLog({ userDetails, userToken }: UserDataProps) {
         updatedWarnings[index] = newWarning;
         return updatedWarnings;
       });
-      console.log("key: ", key, "value: ", value);
-      console.log("Index: ", index)
     }
     
-    console.log("name: ", e.target.name)
     const index = itemFormDetails.findIndex((detail) => detail.name === e.target.name);
     const newWarning = CheckItemLine(String(e.target.name),
                                     String(e.target.value));

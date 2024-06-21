@@ -32,7 +32,6 @@ export function FinalList ({ userToken }: { userToken: string | null }) {
         })
       .then(data => {
         if (data) {
-          console.log("DATA: ", data.data)
           if (data.error) { 
             setError(data.error) 
           } else {

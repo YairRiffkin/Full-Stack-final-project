@@ -33,7 +33,6 @@ export function PendingUserRequest({ userToken }: { userToken: string | null }) 
         })
       .then(data => {            
         if (data && data.data) {
-          console.log("DATA: ", data, "INDEX: ", data.user[indexed])
           setPendingData(data.data);
           setUserDetails(data.user)
           if (data.user && data.user[indexed]) {
@@ -96,7 +95,6 @@ export function PendingUserRequest({ userToken }: { userToken: string | null }) 
           setApprovalStatus(true);
           const pendingDataLength = pendingData ? Object.keys(pendingData).length : 0;
           setIndexed(indexed >= pendingDataLength ? pendingDataLength - 1 : indexed);
-          console.log("length: ", pendingDataLength, "indexed: ", indexed);
     }})
           .catch(error => {
             console.error("Error:", error);

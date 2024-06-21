@@ -28,7 +28,6 @@ def new_user() -> dict:
     new_user = User(*(data.get(attr) if data.get(attr) else None for attr in User.__annotations__))
     # Checking all details are in correct format
     exceptions = new_user.check_user_details()
-    print("exceptions: ", exceptions, "error: ", error)
     if not exceptions:
         # Create standard appearance
         new_user.beautify_user_data()
@@ -77,50 +76,56 @@ def get_me() -> dict:
     data = request.get_json()
     user_id = token_data["sub"]
     user = db_fetchone("users", ["employee_id", "email"], ["id"], [user_id])
-    # Checking if update includes password
-    if data["password1"]:
-        # Extra security check
-        update = ok_to_update_password(user_id)
-        if update:
-            # Checking correct password
-            issues = check_password(data["password1"], data["password2"])
-            # If OK - updating password and logging action
-            if not issues["Password"]:
-                log_data = [data["employee_id"],    # Identifier
-                            "user",                 # type
-                            "active",               # status
-                            "update password",      # action
-                            data["employee_id"],    # performed by..
-                            None                    # next for action
-                            ]
-                db_set("users",                 # table
-                       ["password"],            # detail
-                       [data["password1"]],     # data
-                       user_id,                 # Where id(default)
-                       log=log_data             # log action
-                       )
-            else:
-                error.update(issues)
-                error_type = 400
     # verify user is updating only his details
-    user_is_user = (user["employee_id"] == data["employee_id"].upper()) and (user["email"] == data["email"].lower())
-    if user_is_user and not error:
-        # perform update
-        log_data = [
-            data["employee_id"],    # Identifier
-            "user",                 # type
-            "active",               # status
-            "update user",          # action
-            data["employee_id"],    # performed by..
-            None                    # next for action
-            ]
-        updated_user = User(*(data.get(attr) if data.get(attr) else None for attr in User.__annotations__))
-        # make sure format is standard
-        updated_user.beautify_user_data()
-        update_data = updated_user.make_update_data()
-        # log change
-        db_set("users", update_data[0], update_data[1], user_id, log=log_data)
-        return {}
+    try:
+        user_is_user = (user["employee_id"] == data["employee_id"].upper()) and (user["email"] == data["email"].lower())
+    except TypeError:
+        user_is_user = None
+    if user_is_user:
+        # Checking if update includes password
+        if data["password1"]:
+            # Extra security check
+            update = ok_to_update_password(user_id)
+            if update:
+                # Checking correct password
+                issues = check_password(data["password1"], data["password2"])
+                # If OK - updating password and logging action
+                if not issues["Password"]:
+                    log_data = [data["employee_id"],    # Identifier
+                                "user",                 # type
+                                "active",               # status
+                                "update password",      # action
+                                data["employee_id"],    # performed by..
+                                None                    # next for action
+                                ]
+                    db_set("users",                 # table
+                           ["password"],            # detail
+                           [data["password1"]],     # data
+                           user_id,                 # Where id(default)
+                           log=log_data             # log action
+                           )
+                else:
+                    error.update(issues)
+                    error_type = 400
+            else:
+                error.update({"authorization": "You have not entered your old password"})
+                error_type = 403
+        else:
+            # perform update
+            log_data = [
+                data["employee_id"],    # Identifier
+                "user",                 # type
+                "active",               # status
+                "update user",          # action
+                data["employee_id"],    # performed by..
+                None                    # next for action
+                ]
+            updated_user = User(*(data.get(attr) if data.get(attr) else None for attr in User.__annotations__))
+            # make sure format is standard
+            updated_user.beautify_user_data()
+            update_data = updated_user.make_update_data()
+            # log change
+            db_set("users", update_data[0], update_data[1], user_id, log=log_data)
     else:
         error.update({"authorization": "You cannot update other users details"})
         error_type = 401
@@ -140,42 +145,50 @@ def get_pending_data() -> dict:
     """
     token_data = get_jwt()
     user_id = token_data["sub"]
-    user_data = db_fetchone("users", ["user_level"], ["id"], [user_id])
-    # action allowed only for admin
-    if user_data["user_level"] != "admin":
-        return {"error": "You are not authorized for this action"}, 401
+    user_data = {}
+    try:
+        user_data = db_fetchone("users", ["user_level"], ["id"], [user_id])["user_level"]
+    except TypeError:
+        user_data = ""
+        # action allowed only for admin
+        if user_data != "admin":
+            return {"error": "You are not authorized for this action"}, 401
     else:
-        return_details = db_fetchall("users",
-                                     ["*"],
-                                     ["user_level"],
-                                     ["pending"]
+        try:
+            return_details = db_fetchall("users",
+                                         ["*"],
+                                         ["user_level"],
+                                         ["pending"]
+                                         )
+            user_list = [dict(row) for row in return_details]
+            annotations = list(User.__annotations__.keys())
+            annotations.remove("id")
+            # matching DB headers with TYPE attributes
+            key_map = dict(zip(User.database_columns, annotations))
+            index = 1
+            return_data = {}
+            return_user = {}
+            for user in user_list:
+                # creating history details
+                db_row = db_fetchone("history",
+                                     ["by", "created", "action"],
+                                     ["current", "next", "relative"],
+                                     ["pending", "admin", user["id"]]
                                      )
-        user_list = [dict(row) for row in return_details]
-        annotations = list(User.__annotations__.keys())
-        annotations.remove("id")
-        # matching DB headers with TYPE attributes
-        key_map = dict(zip(User.database_columns, annotations))
-        index = 1
-        return_data = {}
-        return_user = {}
-        for user in user_list:
-            # creating history details
-            db_row = db_fetchone("history",
-                                 ["by", "created", "action"],
-                                 ["current", "next", "relative"],
-                                 ["pending", "admin", user["id"]]
-                                 )
-            name = db_fetchone("users", ["username"], ["employee_id"], [db_row["by"]])
-            relative = user["id"]
-            user.pop("id")
-            # creating users list
-            user = {key_map.get(k, k): v for k, v in user.items()}
-            row_dict = dict(zip(["by", "created", "action"], db_row))
-            row_dict["username"] = str(name[0])
-            row_dict["relative"] = relative
-            return_data[index] = row_dict
-            return_user[index] = user
-            index += 1
+                name = db_fetchone("users", ["username"], ["employee_id"], [db_row["by"]])
+                relative = user["id"]
+                user.pop("id")
+                # creating users list
+                user = {key_map.get(k, k): v for k, v in user.items()}
+                row_dict = dict(zip(["by", "created", "action"], db_row))
+                row_dict["username"] = str(name[0])
+                row_dict["relative"] = relative
+                return_data[index] = row_dict
+                return_user[index] = user
+                index += 1
+        except TypeError:
+            return_data = {}
+            return_user = {}
         return {"data": return_data, "user": return_user}, 200
 
 
@@ -187,13 +200,16 @@ def get_approve() -> None:
     token_data = get_jwt()
     user_id = token_data["sub"]
     data = request.get_json()
-    user_data = db_fetchone("users", ["user_level", "employee_id"], ["id"], [user_id])
-    updated_user = db_fetchone("users", ["user_level", "employee_id"], ["id"], [data["ID"]])
-    approver = user_data["user_level"]
+    try:
+        user_data = db_fetchone("users", ["user_level", "employee_id"], ["id"], [user_id])
+        approver = user_data["user_level"]
+    except TypeError:
+        approver = ""
     # action allowed only for admin
     if approver != "admin":
         return {"error": "You are not authorized for this action"}, 401
     else:
+        updated_user = db_fetchone("users", ["user_level", "employee_id"], ["id"], [data["ID"]])
         log_data = [
             updated_user["employee_id"],    # user identifier
             "user",                         # type of object logged
@@ -209,7 +225,7 @@ def get_approve() -> None:
             str(data["ID"]),
             log=log_data
             )
-        return {"data": "all good"}
+        return {"data": "all good"}, 200
 
 
 @bp.route("/users/password", methods=["GET", "POST"])
@@ -249,7 +265,6 @@ def get_employee_data() -> dict:
         dict:   error: if details are wrong or unauthorized
                 user details if correct 
     """
-    print("in get data")
     error = {}
     error_type = None
     token_data = get_jwt()

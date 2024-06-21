@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import '../components/static/pendingstyle.css'
 import { MyResponseContainerType } from "../models/Responsetypes";
-import { useLocalStorage } from "@uidotdev/usehooks";
 import { Item, ItemContainerType } from "../models/itemtypes";
 import { ProcDetailsDisplay, ProcDisplayTable } from "../components/pages/PendingProcHtmlElements";
 
@@ -38,7 +37,6 @@ export function ProcData({ userToken }: { userToken: string | null }) {
         })
       .then(data => {            
         if (data && data.data) {
-          console.log("DATA: ", data.item)
           setComment("");
           setPendingData(data.data);
           setItemDetails(data.item);
