@@ -1,3 +1,5 @@
+// Default displays
+
 import { ActiveHeader, BlankHeader, HomeBodyDisplay, PendingHeader, UpdateHeader } from "../components/pages/HomePageDisplayElements";
 import { User } from "../models/usertypes";
 import '../components/static/GeneralPage.css'
@@ -12,11 +14,12 @@ export function HomePage({ userDetails }: { userDetails: User | null }) {
     status = "updated"
     displayDetails = user
   } else {
-    status = userDetails?.user_level
-                  ? userDetails?.user_level === "pending"
-                      ? "pending"
-                      : "active"
-                  : "blank";
+    // Checks what is the user level status to adjust display
+    status = userDetails?.user_level ? 
+                userDetails?.user_level === "pending" ?
+                  "pending"
+                : "active"
+              : "blank";
     displayDetails = userDetails
   }
 

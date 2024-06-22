@@ -12,7 +12,6 @@ import { PendingItemRequest } from './pages/PendingItem';
 import { ProcData } from './pages/Procurement';
 import { UserEdit } from './pages/UserEdit';
 import { NewUserRequest } from './pages/Register';
-import { Logout } from './pages/Logout';
 import { useEffect } from 'react';
 import { User } from './models/usertypes';
 import { useLocalStorage } from "@uidotdev/usehooks";
@@ -53,7 +52,6 @@ export default function App() {
             <Route path="/UserLevel" element={<UpdateUserLevel userToken={ userToken} />} />
             <Route path="/FinalList" element={<FinalList userToken={ userToken} />} />
             <Route path="/register" element={<NewUserRequest setUserDetails={setUserDetails} />} />
-            <Route path="/logout" element={<Logout />} />
           </Routes>
         </div>
       </BrowserRouter>

@@ -87,7 +87,6 @@ export function ItemIssues(error: string[]) {
 export function DefaultDisplay(name: string, value: string) {
   /*Set default values where details are connected to reduce mistakes */
   const correction: { [key: string]: string | null | undefined } = {};
-
   if (name.trim() === "plant") {
     /*Plant inherently defines cost center */
     const defaultValue = LocationList.find(item => item.choice === value.trim());

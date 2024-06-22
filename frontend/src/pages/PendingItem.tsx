@@ -1,3 +1,5 @@
+// Handles pending items. Get list and approve if OK
+
 import { useEffect, useState } from "react";
 import '../components/static/pendingstyle.css'
 import { DetailsDisplay, ItemDisplayTable, TopDisplay} from "../components/pages/PendingItemHtmlElements";
@@ -38,7 +40,8 @@ export function PendingItemRequest({ userToken }: { userToken: string | null }) 
         }
         return response.json();
         })
-      .then(data => {            
+      .then(data => { 
+        // Get all pending items according to selection    
         if (data && data.data) {
           setComment("")
           setPendingData(data.data);
@@ -63,6 +66,7 @@ export function PendingItemRequest({ userToken }: { userToken: string | null }) 
       }, [userToken, selectLoc, approvalStatus, isTyping]);
 
     const handleScroll = () => {
+      /*Scrolls through the list*/
       setIndexed((prevIndexed) => {
         const pendingDataLength = pendingData ? Object.keys(pendingData).length : 0;
         if (itemDetails && (prevIndexed < pendingDataLength || prevIndexed > 0)) {
@@ -82,6 +86,7 @@ export function PendingItemRequest({ userToken }: { userToken: string | null }) 
     };
 
     const handleApprove = () => {
+      /* If approved - taken off the list */
       fetch(BACKEND_URL + "/items/approve", {
         method: "POST",
         headers: { 

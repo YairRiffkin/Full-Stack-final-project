@@ -1,3 +1,5 @@
+// Same as pending items only for procurement - different layout
+
 import { useEffect, useState } from "react";
 import '../components/static/pendingstyle.css'
 import { MyResponseContainerType } from "../models/Responsetypes";

@@ -1,3 +1,5 @@
+// Navigation bar element:
+// available options update according to user level
 
 import { homeView, navBarView, navLeftView } from "./navbaruserinterface";
 import '../static/navbar.css';

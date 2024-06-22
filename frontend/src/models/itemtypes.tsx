@@ -82,10 +82,8 @@ export const newItem = {
     status: null
     }
 
-export function initializeItem(): Item {
-    const userDataString = localStorage.getItem("userData");
-    const parsedUserDetails = userDataString ? JSON.parse(userDataString) : null;
-    const location = parsedUserDetails.location;
+export function initializeItem(location: string | null): Item {
+    console.log("location: ", location)
     const itemFormDetails: ItemFormDetail[] = ItemFormDetails;
     const initialItem: Item = newItem;
     (Object.keys(initialItem) as (keyof Item)[]).forEach((key) => {

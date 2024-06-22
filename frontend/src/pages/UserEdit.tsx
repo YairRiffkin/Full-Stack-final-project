@@ -1,3 +1,7 @@
+// Each user can only change his details:
+// key data is blocked for change (employee ID and email).
+// Password change as an option
+
 import { useEffect, useState } from "react";
 import '../components/static/GeneralPage.css'
 import { FormDetail } from "../models/formtypes";
@@ -72,6 +76,7 @@ export function UserEdit({ userDetails, userToken }: UserDataProps) {
                       return null
                     }
                     if ( passwordUpdate && formDetail.name === 'password1') {
+                      // If change password has been chosen
                       return <UpdatePassword 
                                               key = { index } 
                                               index={ index } 

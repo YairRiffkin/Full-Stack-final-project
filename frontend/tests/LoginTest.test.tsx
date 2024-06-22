@@ -5,8 +5,7 @@ import React from 'react';
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { LoginPage } from '../src/pages/Login';
 import { HomePage } from '../src/pages/HomePage';
-import { User } from '../src/models/usertypes';
-import { mockedNavigate } from './setup';
+import { mockedErrorFetch, mockedNavigate } from './setup';
 
 describe('LoginPage', () => {
     vi.stubGlobal("navigate", mockedNavigate);
@@ -28,6 +27,8 @@ describe('LoginPage', () => {
         return { usernameInput, passwordInput, submitButton };
     };
 
+    const getFormErrors = () => document.querySelectorAll(".error");
+
     const renderAndFillForm = async (username, password) => {
         const {usernameInput, passwordInput, submitButton} = renderForm();
         const user = userEvent.setup();
@@ -47,7 +48,6 @@ describe('LoginPage', () => {
         const { submitButton } = await renderAndFillForm("E12345", "Aa1234");
         const errors = document.querySelectorAll("small");
         expect(errors.length).toEqual(0);
-        console.log("warning: ", errors.length)
         expect(submitButton).toBeEnabled();
     });
 
@@ -55,8 +55,17 @@ describe('LoginPage', () => {
         const { submitButton } = await renderAndFillForm("d.d@xxx.com", "Aa1234");
         const errors = document.querySelectorAll("small");
         expect(errors.length).toEqual(0);
-        console.log("warning: ", errors.length)
         expect(submitButton).toBeEnabled();
+    });
+
+    it("Gives an error if user does not exist", async () => {
+        const { submitButton, user } = await renderAndFillForm("d.d@xxx.com", "Aa1234");
+        await user.click(submitButton)
+        expect(mockedErrorFetch).toHaveBeenCalled();
+        mockedErrorFetch.mockClear();
+        const errors = document.querySelectorAll("small");
+        expect(errors.length).toBeGreaterThan(0);
+        console.log("warning: ", errors)
     });
 });
 

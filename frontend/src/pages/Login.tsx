@@ -1,3 +1,4 @@
+// handles login
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import '../components/static/GeneralPage.css'
@@ -17,6 +18,7 @@ export function LoginPage({ setUserToken }: UserDataProps ) {
     const navigate = useNavigate();
 
     function checkEmptyInput() {
+        /* If both inputs are complete submit is enabled*/
         (usernameRef.current?.value && passwordRef.current?.value)? setInputStatus(false): setInputStatus(true);
     }
     

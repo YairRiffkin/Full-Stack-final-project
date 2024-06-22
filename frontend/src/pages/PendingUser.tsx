@@ -1,3 +1,5 @@
+// Handles pending users. Get list and approve if OK
+
 import { useEffect, useState } from "react";
 import '../components/static/pendingstyle.css'
 import { MyResponseContainerType } from "../models/Responsetypes";
@@ -31,7 +33,8 @@ export function PendingUserRequest({ userToken }: { userToken: string | null }) 
         }
         return response.json();
         })
-      .then(data => {            
+      .then(data => {        
+        // Get all pending users according to selection      
         if (data && data.data) {
           setPendingData(data.data);
           setUserDetails(data.user)
@@ -52,6 +55,7 @@ export function PendingUserRequest({ userToken }: { userToken: string | null }) 
       }, [userToken, approvalStatus]);
 
     const handleScroll = () => {
+      /*Scrolls through the list*/
       setIndexed((prevIndexed) => {
         const pendingDataLength = pendingData ? Object.keys(pendingData).length : 0;
         if (userDetails && (prevIndexed < pendingDataLength || prevIndexed > 0)) {
@@ -71,6 +75,7 @@ export function PendingUserRequest({ userToken }: { userToken: string | null }) 
     };
 
     const handleApprove = () => {
+      /* If approved - taken off the list */
       const pendingDataLength = pendingData ? Object.keys(pendingData).length : 0;
       if (pendingDataLength > 0) {
       fetch(BACKEND_URL + "/users/approve", {

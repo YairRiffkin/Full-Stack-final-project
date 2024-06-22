@@ -1,5 +1,4 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import React from 'react';
 import { MemoryRouter, Route, Routes } from "react-router-dom";
@@ -43,22 +42,6 @@ describe('UserEdit', () => {
         const passwordButton = screen.getByRole('button', { name: /Password/i });
         const submitButton = screen.getByRole('button', { name: /UPDATE/i });
         return { usernameInput, employeeIDInput, emailInput, phoneInput, locationInput, roleInput, passwordButton, submitButton };
-    };
-
-    const renderAndFillShortForm = async (username, employeeID, email, phone, location, role) => {
-        const {usernameInput, employeeIDInput, emailInput, phoneInput, locationInput, roleInput, passwordButton, submitButton} = renderForm();
-        const user = userEvent.setup();
-        await user.click(usernameInput)
-        await user.keyboard(username)
-        await user.click(employeeIDInput)
-        await user.keyboard(employeeID)
-        await user.click(emailInput)
-        await user.keyboard(email)
-        await user.click(phoneInput)
-        await user.keyboard(phone)
-        await user.selectOptions(locationInput, location)
-        await user.selectOptions(roleInput, role)
-        return { usernameInput, employeeIDInput, emailInput, phoneInput, locationInput, roleInput, passwordButton, submitButton, user };
     };
 
     it("Renders the register form existing user details", () => {

@@ -1,3 +1,5 @@
+// Admin only to change user level status
+
 import { useEffect, useRef, useState } from 'react';
 import '../components/static/GeneralPage.css'
 import { User } from '../models/usertypes';

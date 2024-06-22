@@ -1,3 +1,5 @@
+// Handles registration of new user. if all is correct is stored as pending for admin approval
+
 import { useEffect, useState } from "react";
 import '../components/static/GeneralPage.css'
 import { FormDetail } from "../models/formtypes";
@@ -37,6 +39,7 @@ export function NewUserRequest({ setUserDetails }: UserDataProps) {
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const index = formDetails.findIndex((detail) => detail.name === e.target.name);
+    // checks each new input for validation
     const newWarning = CheckInputLine(String(e.target.name),
                                       e.target.value,
                                       e.target.name === "password2" ? 

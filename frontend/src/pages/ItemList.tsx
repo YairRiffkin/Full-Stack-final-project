@@ -1,4 +1,4 @@
-
+// Displays the full item list with status and comments
 import { useEffect, useState } from 'react';
 import '../components/static/ItemListStyle.css'
 import { ItemWithID } from '../models/itemtypes';

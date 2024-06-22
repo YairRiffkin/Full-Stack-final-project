@@ -6,7 +6,7 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { NewUserRequest } from '../src/pages/Register';
 import { HomePage } from '../src/pages/HomePage';
 import { User } from '../src/models/usertypes';
-import { mockedNavigate } from './setup';
+import { mockedErrorFetch, mockedNavigate } from './setup';
 
 describe('NewUserRequest', () => {
     vi.stubGlobal("navigate", mockedNavigate);
@@ -119,5 +119,14 @@ describe('NewUserRequest', () => {
         expect(errors.length).toBeGreaterThan(0);
         expect(submitButton).toBeDisabled();
         }));
+    });
+
+    it("Shows error if returned from backend", async () => {
+        const { submitButton, user } = await renderAndFillForm("Yair Cohen", "E12345", "admin@xxx.com", "0526088092", "Afula", "Other", "Aa1234", "Aa1234");
+        await user.click(submitButton)
+        expect(mockedErrorFetch).toHaveBeenCalled();
+        mockedErrorFetch.mockClear();
+        const errors = document.querySelectorAll("small");
+        expect(errors.length).toBeGreaterThan(0);
     });
 });

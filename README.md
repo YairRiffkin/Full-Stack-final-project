@@ -53,7 +53,7 @@ pip install -r requirements.txt
 
 > The default should be “not_testing” as this is the key the code is looking for.
 
-After that you can run the backend server (inside the backend directory
+After that you can run the backend server (inside the backend directory)
 
 ```bash
 flask run
@@ -98,13 +98,13 @@ The password is: Aa1234
 >The initial admin user is created only once, when the database file is created. If you delete the database file, the initial admin user will be created again. 
 >It is also highly recommended to change the initial admin password after the first login.
 >Without an admin present in the database many of the features cannot be accessed.
->Admin details can changed before activating the app in the [schema file](backend\database\schema.sql), at the bottom of the file.
+>Admin details can changed before activating the app in the [schema file](https://github.com/YairRiffkin/JBapp/blob/main/backend/database/schema.sql), at the bottom of the file.
 
 ### Demo data for using the application
 
 # Backend:
 
-From the /backend directory run the file [dbDemo](backend\dbDemo.py).
+From the /backend directory run the file [dbDemo](https://github.com/YairRiffkin/JBapp/blob/main/backend/dbDemo.py).
 
 This will fill the database with items and users at different levels.
 
@@ -113,3 +113,45 @@ This will fill the database with items and users at different levels.
 I have added a feature in the /newitem page to choose from a list of item data, to save the time for typing in all the details.
 
 The user still needs to enter a few details to complete the form for submission.
+
+### General Explanation
+
+The app is intended to monitor and supervise new item input to the company ERP system.
+
+For This a standard has been written with clear expectations of mandatory data, format ect.
+
+The App deals with 2 aspects:
+
+1) Users -> who can enter the system, and what actions are allowed for each level.
+
+2) Items -> what must be entered, who approves, in what format, unique values ect.
+
+# Users
+
+1) A user can only be a company employee.
+
+2) "user" can only enter new items.
+
+3) "admin" can perform all user actions and is the only person to approve pending requests.
+
+4) Once the item is approved the procurement person ("proc") can allow the item to be registered.
+
+# Items
+
+The standard is attached to this project as an excel file with tables.
+
+From this standard I built the item specifications and forms.
+
+The process is as follows:
+
+1) Registering a new item : status will be "pending".
+
+2) Approval by admin: status will be "proc".
+
+3) Approval by procurement: status will be "final".
+
+The last stage which is not in the scope of this project, is to plant this data in a standard excel sheet in the desired format. This sheet is then uploaded, as-is, to the ERP system.
+
+To simulate this stage i have added the Final List page, where you can see the data elements in correct format and arranged according to the destination excel tables.
+
+

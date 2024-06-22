@@ -94,6 +94,8 @@ export function ItemSelectInput({ itemDetail, handleChange, itemForm, userLevel 
     <select 
       disabled= { (itemDetail.name === "plant" && userLevel !== "admin") ? true : false }
       name={itemDetail.name} 
+      id={itemDetail.name}
+      data-testid={itemDetail.name}
       value={itemForm[itemDetail.name as keyof Item] || ''}
       onChange={(e) => handleChange(e)} 
     >
@@ -111,6 +113,7 @@ export function ItemSelectInput({ itemDetail, handleChange, itemForm, userLevel 
 export function ItemSubmitButton({ itemComplete, setError, itemForm, userToken }: ButtonProps) {
   return (
     <button type= "submit"
+                      id="submit button"
                       disabled={itemComplete}
                       onClick={(event) => {
                         event.preventDefault();
@@ -132,7 +135,7 @@ export function ItemSubmitButton({ itemComplete, setError, itemForm, userToken }
                           .catch((error) => alert("Error submitting item: " + error));
                       }}      
               >
-                { itemComplete ? <span>Complete the form as requested</span> :<strong>SUBMIT</strong> }
+                { itemComplete ? <span>Complete the form as requested</span> :<span>SUBMIT</span> }
               </button>
   )
 }
@@ -144,14 +147,17 @@ export type DemoDataProps = {
 
 export function DemoSelectItem( { setItemForm, setWarnings }: DemoDataProps) {
   return (<>
-            <label style = {{ marginRight: "30px" }}
+            <label 
+            htmlFor="demo item"
+            style = {{ marginRight: "30px" }}
             >
-              Select demo item number from 1 - 50": 
+              Select demo item number from 1 - 50: 
             </label>
             <input                 
                   style={{ maxWidth: '100px' }}
                   type= "number"
                   name= "demo item"
+                  id="demo item"
                   defaultValue={25}
                   placeholder= "demo item"
                   onChange= { (e) => {

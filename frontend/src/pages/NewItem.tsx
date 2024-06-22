@@ -1,3 +1,4 @@
+// Handles new item input
 import { useEffect, useState } from "react";
 import '../components/static/itemstyle.css'
 import { ItemFormDetail } from "../models/formtypes";
@@ -14,24 +15,24 @@ export type UserDataProps = {
 
 export function NewItemLog({ userDetails, userToken }: UserDataProps) {
   const itemFormDetails: ItemFormDetail[] = ItemFormDetails;
-  const [itemForm, setItemForm] = useState<Item>(() => initializeItem());
+  const [itemForm, setItemForm] = useState<Item>(() => initializeItem(userDetails?.location ?? ""));
   const [warnings, setWarnings] = useState<(string)[]>(ItemDefaultWarning());
   const [error, setError] = useState<string[] | null>(null)
   const [itemComplete, setItemComplete] = useState<boolean>(true);
 
-  
-
   useEffect(() => {
+    // Checks if all the required details are existing
     setItemComplete(CheckItemComplete( warnings));
   }, [error, itemForm, userDetails, warnings]);
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    
+    // Sets default values according to input
     const defaultDisplay = DefaultDisplay(String(e.target.name), String(e.target.value));
     if (Object.keys(defaultDisplay).length > 0) {
       const [key, value] = Object.entries(defaultDisplay)[0];
       const index = itemFormDetails.findIndex((detail) => detail.name === key);
       (itemForm as any)[key] = value;
+      // Validate input on change
       const newWarning = CheckItemLine(String(key),
                                     String(value));
       setWarnings((prevWarnings) => {
@@ -57,7 +58,7 @@ export function NewItemLog({ userDetails, userToken }: UserDataProps) {
         [name]: value,
       }));
   };
-
+ 
   return  <form className="item-box">
             { (error) ? ItemIssues(error) : null }
               <table className="item-table">
