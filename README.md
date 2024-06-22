@@ -1,4 +1,4 @@
-John Bryce Full Stack Project
+JBapp (John Bryce App)
 
 This is an app to register and approve mechanical spare parts for purchase and inventory management.
 
