@@ -43,3 +43,6 @@ Pipfile.lock
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+~$README.md
+~WRL3862.tmp
