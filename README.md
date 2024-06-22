@@ -16,7 +16,7 @@ cd JBapp
 # Create a virtual environment:
 
 ```bash
-python -m venv .venv
+python -m venv venv
 ```
 
 Activate the environment:
@@ -24,7 +24,7 @@ Activate the environment:
 On windows:
 
 ```bash
-python -m venv .venv
+.\venv\Scripts\Activate.ps1
 ```
 
 On macOS/Linux:
