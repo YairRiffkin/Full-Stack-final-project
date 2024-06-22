@@ -1,6 +1,6 @@
 
 import datetime
-from flask import app, current_app
+from flask import current_app
 from database.db import get_db
 from database.dbelements.db_query_strings import query_insert, query_select, query_set, query_set_if_exists
 
@@ -72,8 +72,9 @@ def db_log(identifier: str,         # what is the object logged identifier
                         (identifier, type, current, created, action, by, next, relative)
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?);"""
     current_datetime = datetime.datetime.now()
-    created = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     # Format it as YYYY-MM-DD HH:MM:SS
+    created = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    # If in test mode this will not log
     if is_testing == "not_testing":
         db = get_db()
         cursor = db.cursor()
