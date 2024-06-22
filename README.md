@@ -83,7 +83,7 @@ You can also run the frontend tests:
 npm run test
 ```
 
-### Database
+# Database
 
 The backend uses SQLite as the database. The database file is created automatically when the backend server is started. If it didn't, or if you need to reset the database, you can delete the `backend/db/data.db` file and restart the backend server. The database will be recreated.
 
@@ -100,21 +100,21 @@ The password is: Aa1234
 >Without an admin present in the database many of the features cannot be accessed.
 >Admin details can changed before activating the app in the [schema file](https://github.com/YairRiffkin/JBapp/blob/main/backend/database/schema.sql), at the bottom of the file.
 
-### Demo data for using the application
+# Demo data for using the application
 
-# Backend:
+### Backend:
 
 From the /backend directory run the file [dbDemo](https://github.com/YairRiffkin/JBapp/blob/main/backend/dbDemo.py).
 
 This will fill the database with items and users at different levels.
 
-# Front end:
+### Front end:
 
 I have added a feature in the /newitem page to choose from a list of item data, to save the time for typing in all the details.
 
 The user still needs to enter a few details to complete the form for submission.
 
-### General Explanation
+# General Explanation
 
 The app is intended to monitor and supervise new item input to the company ERP system.
 
@@ -126,7 +126,7 @@ The App deals with 2 aspects:
 
 2) Items -> what must be entered, who approves, in what format, unique values ect.
 
-# Users
+### Users
 
 1) A user can only be a company employee.
 
@@ -136,7 +136,7 @@ The App deals with 2 aspects:
 
 4) Once the item is approved the procurement person ("proc") can allow the item to be registered.
 
-# Items
+### Items
 
 The standard is attached to this project as an excel file with tables.
 
